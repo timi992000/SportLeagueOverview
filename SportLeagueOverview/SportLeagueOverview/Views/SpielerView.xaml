@@ -1,4 +1,4 @@
-﻿<UserControl x:Class="SportLeagueOverview.Views.SpielerView"
+﻿<core:UserControlBase  xmlns:core="clr-namespace:SportLeagueOverview.Core" x:Class="SportLeagueOverview.Views.SpielerView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
@@ -7,6 +7,29 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
-            
+        <Grid.RowDefinitions>
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+
+        <Label x:Name="lblName"
+               Content="Name"
+               Grid.Row="0"
+               Grid.Column="0"
+               Height="25"
+               VerticalAlignment="Top"/>
+        <TextBox Text="{Binding SpielerName, Mode=TwoWay}"
+                 Grid.Row="0"
+                 Grid.Column="1" 
+                 Height="{Binding Height, ElementName=lblName}"
+                 VerticalAlignment="Top"/>
     </Grid>
-</UserControl>
+</core:UserControlBase>
