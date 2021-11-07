@@ -11,9 +11,4 @@
     <PackageReference Include="MahApps.Metro.Resources" Version="0.6.1" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Views\" />
-    <Folder Include="ViewModels\" />
-  </ItemGroup>
-
 </Project>
