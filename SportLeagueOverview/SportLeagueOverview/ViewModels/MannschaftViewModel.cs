@@ -6,6 +6,7 @@ namespace SportLeagueOverview.ViewModels
   {
     private string m_MannschaftsName;
     private string m_GründungsJahr;
+    private string m_Trainer;
 
     public MannschaftViewModel()
     {
@@ -28,6 +29,16 @@ namespace SportLeagueOverview.ViewModels
       {
         m_GründungsJahr = value;
         OnPropertyChanged(nameof(GründungsJahr));
+      }
+    }
+
+    public string Trainer
+    {
+      get => m_Trainer;
+      set
+      {
+        m_Trainer = value;
+        OnPropertyChanged(nameof(Trainer));
       }
     }
   }

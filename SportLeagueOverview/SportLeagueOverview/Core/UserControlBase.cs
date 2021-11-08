@@ -26,6 +26,7 @@ namespace SportLeagueOverview.Core
       //Update Controls and Set special things to it so u dont need to do it at all xaml controls
       __SetRulesForAllTextBoxes();
       __SetRulesForAllLabels();
+      __SetRulesForALlDatePickers();
     }
 
     private void __SetRulesForAllTextBoxes()
@@ -35,10 +36,20 @@ namespace SportLeagueOverview.Core
       {
         foreach (var TextBox in TextBoxes)
         {
-          TextBoxHelper.SetClearTextButton(TextBox, true);
+          TextBoxHelper.SetClearTextButton(TextBox, false);
+          TextBox.TextChanged += (sender, eventArgs) =>
+          {
+            if (sender is System.Windows.Controls.TextBox ChangedTextBox)
+            {
+              if (ChangedTextBox.Text != null && ChangedTextBox.Text.Length > 0)
+                TextBoxHelper.SetClearTextButton(ChangedTextBox, true);
+              else
+                TextBoxHelper.SetClearTextButton(ChangedTextBox, false);
+            }
+          };
           TextBoxHelper.SetSelectAllOnFocus(TextBox, true);
           TextBoxHelper.SetAutoWatermark(TextBox, true);
-          TextBox.Height = 30;
+          TextBox.MaxHeight = 30;
           TextBox.VerticalAlignment = VerticalAlignment.Top;
         }
       }
@@ -53,6 +64,20 @@ namespace SportLeagueOverview.Core
         {
           Label.Height = 30;
           Label.VerticalAlignment = VerticalAlignment.Top;
+        }
+      }
+    }
+
+    private void __SetRulesForALlDatePickers()
+    {
+      var AllDatePicker = FindVisualChildren<DatePicker>(this).ToList();
+      if (AllDatePicker.Any())
+      {
+        foreach (var DatePicker in AllDatePicker)
+        {
+          DatePicker.Height = 30;
+          DatePicker.MaxHeight = 30;
+          DatePicker.VerticalAlignment = VerticalAlignment.Top;
         }
       }
     }
