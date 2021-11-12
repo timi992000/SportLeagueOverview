@@ -48,7 +48,7 @@ namespace SportLeagueOverview.Core
             }
           };
           TextBoxHelper.SetSelectAllOnFocus(TextBox, true);
-          TextBoxHelper.SetAutoWatermark(TextBox, true);
+          //TextBoxHelper.SetAutoWatermark(TextBox, true);
           TextBox.MaxHeight = 30;
           TextBox.VerticalAlignment = VerticalAlignment.Top;
         }

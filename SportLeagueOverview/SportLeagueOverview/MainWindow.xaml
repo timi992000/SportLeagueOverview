@@ -5,26 +5,96 @@
                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                  xmlns:local="clr-namespace:SportLeagueOverview.Views"
+                 xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks" 
+                 xmlns:controls="clr-namespace:SportLeagueOverview.Core.Controls"
                  mc:Ignorable="d"
                  Title="Liga Übersicht" Height="450" Width="800">
+    <mah:MetroWindow.Resources>
+        <DataTemplate x:Key="MenuItemTemplate" DataType="{x:Type controls:OwnGlyphItem}">
+            <Grid Height="48">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="48" />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+                <Path Grid.Column="0" Data="{Binding PathData}"
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                      Fill="Black">
+                    
+                </Path>
+                <TextBlock Grid.Column="1"
+                    VerticalAlignment="Center"
+                    FontSize="16"
+                    Foreground="White"
+                    Text="{Binding Label}" />
+            </Grid>
+        </DataTemplate>
+    </mah:MetroWindow.Resources>
     <Grid>
-        <mah:MetroTabControl>
-            
-            <mah:MetroTabItem Header="Mannschaft">
-                <local:MannschaftView DataContext="{Binding MannschaftViewModel}"/>
-            </mah:MetroTabItem>
+        <mah:HamburgerMenu x:Name="HamburgerMenuControl"
+                           Foreground="White"
+                           PaneBackground="#FF444444"
+                           IsPaneOpen="False"
+                           DisplayMode="CompactInline"
+                           ItemTemplate="{StaticResource MenuItemTemplate}"
+                           OptionsItemTemplate="{StaticResource MenuItemTemplate}"
+                           ItemClick="HamburgerMenuControl_OnItemClick"
+                           OptionsItemClick="HamburgerMenuControl_OnItemClick">
+            <mah:HamburgerMenu.ContentTemplate>
+                <DataTemplate DataType="{x:Type mah:HamburgerMenuItem}">
+                    <Grid x:Name="TheContentGrid">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="48" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+                        <Border Grid.Row="0"
+                    Background="#FF444444">
+                            <TextBlock x:Name="Header"
+                            HorizontalAlignment="Center"
+                            VerticalAlignment="Center"
+                            FontSize="24"
+                            Foreground="White"
+                            Text="{Binding Label}" />
+                        </Border>
+                        <ContentControl x:Name="TheContent"
+                            Grid.Row="1"
+                            Focusable="False"
+                            Foreground="{DynamicResource BlackBrush}"
+                            Content="{Binding Tag}" />
+                    </Grid>
+                </DataTemplate>
+            </mah:HamburgerMenu.ContentTemplate>
 
-            <mah:MetroTabItem Header="Spieler">
-                <local:SpielerView DataContext="{Binding SpielerViewModel}"/>
-            </mah:MetroTabItem>
-            
-            <mah:MetroTabItem Header="Spiele">
-                <local:SpieleView DataContext="{Binding SpieleViewModel}"/>
-            </mah:MetroTabItem>
-            
-            <mah:MetroTabItem Header="Statistiken">
-                <local:StatistikenView DataContext="{Binding StatistikenViewModel}"/>
-            </mah:MetroTabItem>
-        </mah:MetroTabControl>
+            <mah:HamburgerMenu.ItemsSource>
+                <mah:HamburgerMenuItemCollection>
+
+                    <controls:OwnGlyphItem Glyph="" Label="Mannschaft">
+                        <mah:HamburgerMenuGlyphItem.Tag>
+                            <local:MannschaftView DataContext="{Binding MannschaftViewModel}"/>
+                        </mah:HamburgerMenuGlyphItem.Tag>
+                    </controls:OwnGlyphItem>
+
+                    <controls:OwnGlyphItem Glyph="" Label="Spieler" >
+                        <mah:HamburgerMenuGlyphItem.Tag>
+                            <local:SpielerView DataContext="{Binding SpielerViewModel}"/>
+                        </mah:HamburgerMenuGlyphItem.Tag>
+                    </controls:OwnGlyphItem>
+
+                    <controls:OwnGlyphItem Glyph="" Label="Spiele">
+                        <mah:HamburgerMenuGlyphItem.Tag>
+                            <local:SpieleView DataContext="{Binding SpieleViewModel}"/>
+                        </mah:HamburgerMenuGlyphItem.Tag>
+                    </controls:OwnGlyphItem>
+
+                    <controls:OwnGlyphItem Glyph="" Label="Statistiken">
+                        <mah:HamburgerMenuGlyphItem.Tag>
+                            <local:StatistikenView DataContext="{Binding StatistikenViewModel}"/>
+                        </mah:HamburgerMenuGlyphItem.Tag>
+                    </controls:OwnGlyphItem>
+
+                </mah:HamburgerMenuItemCollection>
+            </mah:HamburgerMenu.ItemsSource>
+        </mah:HamburgerMenu>
+        
     </Grid>
 </mah:MetroWindow>
