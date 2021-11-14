@@ -1,5 +1,6 @@
 ﻿using ControlzEx.Theming;
 using SportLeagueOverview.Core;
+using SportLeagueOverview.Core.Common;
 using SportLeagueOverview.ViewModels;
 using System.Windows;
 
@@ -15,6 +16,7 @@ namespace SportLeagueOverview
     public MainViewModel()
     {
       ThemeManager.Current.ChangeTheme(Application.Current, "Light.Blue");
+      DatenbankHelfer.Initialize();
     }
 
     public MannschaftViewModel MannschaftViewModel
