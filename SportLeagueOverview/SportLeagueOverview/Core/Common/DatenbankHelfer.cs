@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Windows;
 
 namespace SportLeagueOverview.Core.Common
@@ -27,29 +28,43 @@ namespace SportLeagueOverview.Core.Common
     #endregion
 
     #region [ExecuteReader]
-    public static List<Dictionary<string, object>> ExecuteReader(string CommandText)
+    public static List<T> ExecuteReader<T>(string CommandText) where T : EntityBase
     {
       try
       {
+        var Result = new List<T>();
         __OpenIfNeeded();
         var AllValues = new List<Dictionary<string, object>>();
         var Command = m_Connection.CreateCommand();
         Command.CommandText = CommandText;
         var Reader = Command.ExecuteReader();
+        var Properties = typeof(T).GetProperties();
         while (Reader.Read())
         {
-          var Row = new Dictionary<string, object>(Reader.FieldCount);
-          var FieldCount = Reader.GetValues(new object[Reader.FieldCount]);
-          for (int i = 0; i < FieldCount; i++)
-            Row[Reader.GetName(i)] =  Reader.GetFieldValue<object>(i);
-          AllValues.Add(Row);
+          T Entity = Activator.CreateInstance<T>();
+          for (int i = 0; i < Reader.FieldCount; i++)
+          {
+            var ColumnName = Reader.GetName(i);
+            if (Properties.Any(x => x.Name == ColumnName))
+            {
+              var PropertyInfo = Properties.First(x => x.Name == ColumnName);
+              var FieldValue = Reader.GetFieldValue<object>(i);
+              if (FieldValue == DBNull.Value)
+                continue;
+              if (FieldValue.GetType() == typeof(long))
+                PropertyInfo.SetValue(Entity, Convert.ToInt32(FieldValue));
+              else
+                PropertyInfo.SetValue(Entity, FieldValue);
+            }
+          }
+          Result.Add(Entity);
         }
-        return AllValues;
+        return Result;
       }
       catch (Exception ex)
       {
         __ThrowMessage(ex.ToString());
-        return new List<Dictionary<string, object>>();
+        return new List<T>();
       }
       finally
       {
