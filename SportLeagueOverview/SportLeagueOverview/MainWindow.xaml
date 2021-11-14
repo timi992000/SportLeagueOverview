@@ -70,25 +70,25 @@
 
                     <controls:OwnGlyphItem Glyph="" Label="Mannschaft">
                         <mah:HamburgerMenuGlyphItem.Tag>
-                            <local:MannschaftView DataContext="{Binding MannschaftViewModel}"/>
+                            <local:MannschaftView Background="{Binding IAMBLUEEEEEEEEEEEEEEEE}"/>
                         </mah:HamburgerMenuGlyphItem.Tag>
                     </controls:OwnGlyphItem>
 
                     <controls:OwnGlyphItem Glyph="" Label="Spieler" >
                         <mah:HamburgerMenuGlyphItem.Tag>
-                            <local:SpielerView DataContext="{Binding SpielerViewModel}"/>
+                            <local:SpielerView/>
                         </mah:HamburgerMenuGlyphItem.Tag>
                     </controls:OwnGlyphItem>
 
                     <controls:OwnGlyphItem Glyph="" Label="Spiele">
                         <mah:HamburgerMenuGlyphItem.Tag>
-                            <local:SpieleView DataContext="{Binding SpieleViewModel}"/>
+                            <local:SpieleView/>
                         </mah:HamburgerMenuGlyphItem.Tag>
                     </controls:OwnGlyphItem>
 
                     <controls:OwnGlyphItem Glyph="" Label="Statistiken">
                         <mah:HamburgerMenuGlyphItem.Tag>
-                            <local:StatistikenView DataContext="{Binding StatistikenViewModel}"/>
+                            <local:StatistikenView/>
                         </mah:HamburgerMenuGlyphItem.Tag>
                     </controls:OwnGlyphItem>
 
