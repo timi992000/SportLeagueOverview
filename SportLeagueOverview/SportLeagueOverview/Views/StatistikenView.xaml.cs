@@ -1,5 +1,5 @@
 ﻿using SportLeagueOverview.Core;
-using System.Windows.Controls;
+using SportLeagueOverview.ViewModels;
 
 namespace SportLeagueOverview.Views
 {
@@ -11,6 +11,7 @@ namespace SportLeagueOverview.Views
     public StatistikenView()
     {
       InitializeComponent();
+      DataContext = new StatistikenViewModel();
     }
   }
 }

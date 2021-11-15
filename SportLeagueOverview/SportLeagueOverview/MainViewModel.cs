@@ -3,7 +3,6 @@ using SportLeagueOverview.Core;
 using SportLeagueOverview.Core.Common;
 using SportLeagueOverview.Core.Entitites;
 using SportLeagueOverview.ViewModels;
-using System.Linq;
 using System.Windows;
 
 namespace SportLeagueOverview

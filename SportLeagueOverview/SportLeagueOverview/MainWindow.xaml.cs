@@ -1,4 +1,5 @@
 ﻿using MahApps.Metro.Controls;
+using SportLeagueOverview.Core.Controls;
 
 namespace SportLeagueOverview
 {
@@ -15,10 +16,15 @@ namespace SportLeagueOverview
 
     private void HamburgerMenuControl_OnItemClick(object sender, ItemClickEventArgs e)
     {
-      // set the content
-      this.HamburgerMenuControl.Content = e.ClickedItem;
-      // close the pane
-      this.HamburgerMenuControl.IsPaneOpen = false;
+      if (DataContext is MainViewModel VM)
+      {
+        HamburgerMenuControl.Content = e.ClickedItem;
+        var SelectedGlyphItem = (OwnGlyphItem)e.ClickedItem;
+      }
+      HamburgerMenuControl.MouseLeave += (sender, e) =>
+        {
+          HamburgerMenuControl.IsPaneOpen = false;
+        };
     }
   }
 }
