@@ -1,6 +1,7 @@
 ﻿using Microsoft.Data.Sqlite;
 using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -28,15 +29,16 @@ namespace SportLeagueOverview.Core.Common
     #endregion
 
     #region [ExecuteReader]
-    public static List<T> ExecuteReader<T>(string CommandText) where T : EntityBase
+    public static List<T> ReadEntity<T>() where T : EntityBase
     {
+      string tmpColumnName = string.Empty;
       try
       {
+        var tmpEntity = Activator.CreateInstance<T>();
         var Result = new List<T>();
         __OpenIfNeeded();
-        var AllValues = new List<Dictionary<string, object>>();
         var Command = m_Connection.CreateCommand();
-        Command.CommandText = CommandText;
+        Command.CommandText = $"SELECT * FROM {tmpEntity.GetType().GetProperty("TableName").GetValue(tmpEntity)}";
         var Reader = Command.ExecuteReader();
         var Properties = typeof(T).GetProperties();
         while (Reader.Read())
@@ -45,6 +47,7 @@ namespace SportLeagueOverview.Core.Common
           for (int i = 0; i < Reader.FieldCount; i++)
           {
             var ColumnName = Reader.GetName(i);
+            tmpColumnName = ColumnName;
             if (Properties.Any(x => x.Name == ColumnName))
             {
               var PropertyInfo = Properties.First(x => x.Name == ColumnName);
@@ -65,6 +68,28 @@ namespace SportLeagueOverview.Core.Common
       {
         __ThrowMessage(ex.ToString());
         return new List<T>();
+      }
+      finally
+      {
+        m_Connection.Close();
+      }
+    }
+    #endregion
+
+    #region [ExecuteReader]
+    public static DbDataReader ExecuteReader(string CommandText)
+    {
+      try
+      {
+        __OpenIfNeeded();
+        var Command = m_Connection.CreateCommand();
+        Command.CommandText = CommandText;
+        return Command.ExecuteReader();
+      }
+      catch (Exception ex)
+      {
+        __ThrowMessage(ex.ToString());
+        return null;
       }
       finally
       {

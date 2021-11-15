@@ -1,15 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace SportLeagueOverview.Core
+﻿namespace SportLeagueOverview.Core
 {
   public class EntityBase
   {
-    public EntityBase()
+    public EntityBase(string TableName)
     {
+      this.TableName = TableName;
     }
+
+    public string TableName { get; set; }
   }
 }

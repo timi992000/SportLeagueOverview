@@ -18,27 +18,13 @@ namespace SportLeagueOverview
     {
       if (DataContext is MainViewModel VM)
       {
-
         HamburgerMenuControl.Content = e.ClickedItem;
-        OwnGlyphItem SelectedGlyphItem = (OwnGlyphItem)e.ClickedItem;
-        switch (SelectedGlyphItem.Label)
-        {
-          default:
-          case "Mannschaft":
-            HamburgerMenuControl.DataContext = VM.MannschaftViewModel;
-            break;
-          case "Spiele":
-            HamburgerMenuControl.DataContext = VM.SpieleViewModel;
-            break;
-          case "Statistiken":
-            HamburgerMenuControl.DataContext = VM.StatistikenViewModel;
-            break;
-          case "Spieler":
-            HamburgerMenuControl.DataContext = VM.SpielerViewModel;
-            break;
-        }
+        var SelectedGlyphItem = (OwnGlyphItem)e.ClickedItem;
       }
-      HamburgerMenuControl.IsPaneOpen = false;
+      HamburgerMenuControl.MouseLeave += (sender, e) =>
+        {
+          HamburgerMenuControl.IsPaneOpen = false;
+        };
     }
   }
 }

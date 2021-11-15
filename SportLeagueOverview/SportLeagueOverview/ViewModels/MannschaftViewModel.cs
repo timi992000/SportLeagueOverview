@@ -1,43 +1,74 @@
 ﻿using SportLeagueOverview.Core;
+using SportLeagueOverview.Core.Common;
+using SportLeagueOverview.Core.Entitites;
+using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace SportLeagueOverview.ViewModels
 {
   public class MannschaftViewModel : ViewModelBase
   {
-    private string m_MannschaftsName;
-    private string m_GründungsJahr;
-    private string m_Trainer;
+    private MannschaftEntity m_CurrentMannschaft;
 
     public MannschaftViewModel()
     {
     }
 
-    public string MannschaftsName
+    public MannschaftEntity CurrentMannschaft
     {
-      get => m_MannschaftsName;
+      get
+      {
+        return m_CurrentMannschaft ?? new MannschaftEntity();
+      }
       set
       {
-        m_MannschaftsName = value;
+        m_CurrentMannschaft = value;
+        OnPropertyChanged(nameof(CurrentMannschaft));
+        OnPropertyChanged(nameof(GründungsJahr));
+        OnPropertyChanged(nameof(MannschaftsName));
+        OnPropertyChanged(nameof(Trainer));
+      }
+    }
+
+    public ObservableCollection<MannschaftEntity> Mannschaften
+    {
+      get
+      {
+        var Result = new ObservableCollection<MannschaftEntity>();
+        DatenbankHelfer.ReadEntity<MannschaftEntity>().ForEach(x => Result.Add(x));
+        CurrentMannschaft = Result.FirstOrDefault();
+        return Result;
+      }
+    }
+    public string MannschaftsName
+    {
+      get => CurrentMannschaft.Name;
+      set
+      {
+        CurrentMannschaft.Name = value;
         OnPropertyChanged(nameof(MannschaftsName));
       }
     }
 
-    public string GründungsJahr
+    public int GründungsJahr
     {
-      get => m_GründungsJahr;
+      get => CurrentMannschaft.Gruendungsjahr;
       set
       {
-        m_GründungsJahr = value;
+        CurrentMannschaft.Gruendungsjahr = value;
         OnPropertyChanged(nameof(GründungsJahr));
       }
     }
 
     public string Trainer
     {
-      get => m_Trainer;
+      get => CurrentMannschaft.TrainerId.ToString();
       set
       {
-        m_Trainer = value;
+        if (value != null && value.Length > 0)
+          CurrentMannschaft.TrainerId = int.Parse(value);
+        else
+          CurrentMannschaft.TrainerId = 0;
         OnPropertyChanged(nameof(Trainer));
       }
     }
