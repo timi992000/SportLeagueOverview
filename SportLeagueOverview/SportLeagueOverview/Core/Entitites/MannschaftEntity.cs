@@ -9,10 +9,13 @@ namespace SportLeagueOverview.Core.Entitites
     {
     }
 
-    [DisplayName("MannschaftsId")]
+    [DisplayName("Mannschaftsnummer")]
     public int MannschaftId { get; set; }
+    [DisplayName("Mannschaftsname")]
     public string Name { get; set; }
+    [DisplayName("Gründung")]
     public int Gruendungsjahr { get; set; }
+    [DisplayName("Wappen")]
     public string Wappen { get; set; }
     public int TrainerId { get; set; }
   }

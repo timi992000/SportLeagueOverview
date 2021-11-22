@@ -9,7 +9,8 @@
                  xmlns:controls="clr-namespace:SportLeagueOverview.Core.Controls"
                  mc:Ignorable="d"
                  Title="Liga Übersicht" Height="450" Width="800"
-                 x:Name="wndMainWindow">
+                 x:Name="wndMainWindow"
+                 WindowStartupLocation="CenterScreen">
     <mah:MetroWindow.Resources>
         <DataTemplate x:Key="MenuItemTemplate" DataType="{x:Type controls:OwnGlyphItem}">
             <Grid Height="48">
@@ -21,7 +22,7 @@
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center"
                       Fill="Black">
-                    
+
                 </Path>
                 <TextBlock Grid.Column="1"
                     VerticalAlignment="Center"
@@ -40,6 +41,7 @@
                            ItemTemplate="{StaticResource MenuItemTemplate}"
                            OptionsItemTemplate="{StaticResource MenuItemTemplate}"
                            ItemClick="HamburgerMenuControl_OnItemClick"
+                           
                            OptionsItemClick="HamburgerMenuControl_OnItemClick">
             <mah:HamburgerMenu.ContentTemplate>
                 <DataTemplate DataType="{x:Type mah:HamburgerMenuItem}">
@@ -96,6 +98,6 @@
                 </mah:HamburgerMenuItemCollection>
             </mah:HamburgerMenu.ItemsSource>
         </mah:HamburgerMenu>
-        
+
     </Grid>
 </mah:MetroWindow>

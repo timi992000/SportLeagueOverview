@@ -19,16 +19,11 @@ namespace SportLeagueOverview.Views
     private void DataGrid_AutoGeneratingColumn(object sender, System.Windows.Controls.DataGridAutoGeneratingColumnEventArgs e)
     {
       e.Column.Header = ((PropertyDescriptor)e.PropertyDescriptor).DisplayName;
-    }
-
-    private void __RowSelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-    {
-      if (DataContext is MannschaftViewModel VM
-        && e.AddedItems[0] is MannschaftEntity Mannschaft)
+      if (e.Column.Header.Equals("Wappen") ||
+        e.Column.Header.Equals("Tabelle"))
       {
-          VM.CurrentMannschaft = Mannschaft;
+        e.Cancel = true;
       }
-      //if(e.AddedItems)
     }
   }
 }

@@ -1,13 +1,11 @@
 ﻿using SportLeagueOverview.Core;
+using SportLeagueOverview.Core.Entitites;
 using System;
 
 namespace SportLeagueOverview.ViewModels
 {
-  public class SpielerViewModel : ViewModelBase
+  public class SpielerViewModel : ViewModelBase<PersonEntity>
   {
-    private string m_SpielerName;
-    private string m_RückenNummer;
-    private DateTime m_Geburtsdatum;
 
     public SpielerViewModel()
     {
@@ -15,30 +13,30 @@ namespace SportLeagueOverview.ViewModels
 
     public string SpielerName
     {
-      get => m_SpielerName;
+      get => CurrentItem.Name;
       set
       {
-        m_SpielerName = value;
+        CurrentItem.Name = value;
         OnPropertyChanged(nameof(SpielerName));
       }
     }
 
-    public string RückenNummer
+    public int RückenNummer
     {
-      get => m_RückenNummer;
+      get => CurrentItem.Rückennummer;
       set
       {
-        m_RückenNummer = value;
+        CurrentItem.Rückennummer = value;
         OnPropertyChanged(nameof(RückenNummer));
       }
     }
 
     public DateTime Geburtsdatum
     {
-      get => m_Geburtsdatum;
+      get => DateTime.Parse(CurrentItem.Geburtsdatum);
       set
       {
-        m_Geburtsdatum = value;
+        CurrentItem.Geburtsdatum = value.ToShortDateString();
         OnPropertyChanged(nameof(Geburtsdatum));
       }
     }

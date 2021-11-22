@@ -1,5 +1,6 @@
 ﻿using MahApps.Metro.Controls;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -26,7 +27,8 @@ namespace SportLeagueOverview.Core
       //Update Controls and Set special things to it so u dont need to do it at all xaml controls
       __SetRulesForAllTextBoxes();
       __SetRulesForAllLabels();
-      __SetRulesForALlDatePickers();
+      __SetRulesForAllDatePickers();
+      __SetRulesForAllDataGrids();
     }
 
     private void __SetRulesForAllTextBoxes()
@@ -70,7 +72,21 @@ namespace SportLeagueOverview.Core
       }
     }
 
-    private void __SetRulesForALlDatePickers()
+    private void __SetRulesForAllDataGrids()
+    {
+      var AllDataGrids = FindVisualChildren<DataGrid>(this).ToList();
+      if (AllDataGrids.Any())
+      {
+        foreach (var DataGrid in AllDataGrids)
+        {
+          DataGrid.IsReadOnly = true;
+          DataGrid.SelectionMode = DataGridSelectionMode.Single;
+          DataGrid.AutoGenerateColumns = true;
+        }
+      }
+    }
+
+    private void __SetRulesForAllDatePickers()
     {
       var AllDatePicker = FindVisualChildren<DatePicker>(this).ToList();
       if (AllDatePicker.Any())

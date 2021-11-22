@@ -1,4 +1,6 @@
-﻿namespace SportLeagueOverview.Core.Entitites
+﻿using System.ComponentModel;
+
+namespace SportLeagueOverview.Core.Entitites
 {
   public class PersonEntity : EntityBase
   {
@@ -7,14 +9,30 @@
     {
     }
 
+    [DisplayName("Spieler Id")]
     public int PersonId { get; set; }
+
+    [DisplayName("Name")]
     public string Name { get; set; }
+
+    [DisplayName("Mannschaft")]
     public int AktuelleMannId { get; set; }
+
+    [DisplayName("Rückennummer")]
     public int Rückennummer { get; set; }
+
+    [DisplayName("Trainer?")]
     public int IsTrainer { get; set; }
+
+    [DisplayName("Geburtsdatum")]
     public string Geburtsdatum { get; set; }
+
     public string Bild { get; set; }
+
+    [DisplayName("Adress Id")]
     public int AdressId { get; set; }
+
+    [DisplayName("Eintrittsdatum")]
     public string Eintrittsdatum { get; set; }
   }
 }
