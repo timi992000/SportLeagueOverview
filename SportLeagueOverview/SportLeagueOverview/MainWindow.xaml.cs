@@ -1,5 +1,7 @@
 ﻿using MahApps.Metro.Controls;
 using SportLeagueOverview.Core.Controls;
+using SportLeagueOverview.Views;
+using System;
 
 namespace SportLeagueOverview
 {
@@ -12,6 +14,7 @@ namespace SportLeagueOverview
     {
       InitializeComponent();
       DataContext = new MainViewModel();
+      HamburgerMenuControl.Content = new OwnGlyphItem { Label = $"Willkommen {Environment.UserName} bei der Mannschaftsverwaltung", Tag = new DefaultView() };
     }
 
     private void HamburgerMenuControl_OnItemClick(object sender, ItemClickEventArgs e)

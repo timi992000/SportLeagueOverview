@@ -14,12 +14,13 @@
             <ColumnDefinition Width="5" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
-        <DataGrid ItemsSource="{Binding Mannschaften}" 
-                  AutoGenerateColumns="True"
-                  AutoGeneratingColumn="DataGrid_AutoGeneratingColumn"
-                  Grid.Column="0"
-                  SelectionChanged="__RowSelectionChanged"
-                  IsReadOnly="True"/>
+        <ScrollViewer Grid.Column="0"
+                      HorizontalScrollBarVisibility="Auto"
+                      VerticalScrollBarVisibility="Auto">
+            <DataGrid ItemsSource="{Binding CurrentItems}"
+                      SelectedItem="{Binding CurrentItem}"
+                      AutoGeneratingColumn="DataGrid_AutoGeneratingColumn"/>
+        </ScrollViewer>
 
 
         <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
@@ -40,40 +41,38 @@
             </Grid.ColumnDefinitions>
 
             <Label Content="Name"
-               Grid.Row="0"
-               Grid.Column="0"
-               VerticalAlignment="Top"
-               Margin="0 0 0 5"/>
-            <TextBox Text="{Binding MannschaftsName, Mode=TwoWay}"
-                 Grid.Row="0"
-                 Grid.Column="1"
-                 VerticalAlignment="Top"
-                 Margin="0 0 0 5"/>
-
-            <Label Content="Gründungsjahr" 
-               Grid.Row="1"
-               Grid.Column="0"
-               Margin="0 0 0 5"/>
-            <controls:NumericBox Text="{Binding GründungsJahr, Mode=TwoWay}" Grid.Row="1"
-                 Grid.Column="1"
-                 MaxLength="4"
-                 MaxLines="1"
-                 Margin="0 0 0 5"/>
-
-            <Label Content="Trainer"
-               Grid.Row="2"
-               Grid.Column="0"
-               Margin="0 0 0 5"/>
-            <TextBox Text="{Binding Trainer, Mode=TwoWay}" Grid.Row="2"
-                  Grid.Column="1"
-                  Margin="0 0 0 5"/>
-
-            <Rectangle Grid.Row="0"
-                   Grid.RowSpan="4"
-                   Grid.Column="3"
-                   Fill="Green"
-                   Height="180"
+                   Grid.Row="0"
+                   Grid.Column="0"
+                   VerticalAlignment="Top"
                    Margin="0 0 0 5"/>
+            <TextBox Text="{Binding MannschaftsName, Mode=TwoWay}"
+                     Grid.Row="0"
+                     Grid.Column="1"
+                     VerticalAlignment="Top"
+                     Margin="0 0 0 5"/>
+
+            <Label Content="Gründungsjahr"
+                   Grid.Row="1"
+                   Grid.Column="0"
+                   Margin="0 0 0 5"/>
+            <controls:NumericBox Text="{Binding GründungsJahr, Mode=TwoWay}" Grid.Row="1"
+                                 Grid.Column="1"
+                                 MaxLength="4"
+                                 MaxLines="1"
+                                 Margin="0 0 0 5"/>
+            <Label Content="Trainer"
+                   Grid.Row="2"
+                   Grid.Column="0"
+                   Margin="0 0 0 5"/>
+            <TextBox Text="{Binding Trainer, Mode=TwoWay}" Grid.Row="2"
+                     Grid.Column="1"
+                     Margin="0 0 0 5"/>
+            <Rectangle Grid.Row="0"
+                       Grid.RowSpan="4"
+                       Grid.Column="3"
+                       Fill="Green"
+                       Height="180"
+                       Margin="0 0 0 5"/>
         </Grid>
     </Grid>
 </core:UserControlBase>

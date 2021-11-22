@@ -7,7 +7,7 @@ using System.Windows;
 
 namespace SportLeagueOverview
 {
-  public class MainViewModel : ViewModelBase
+  public class MainViewModel : ViewModelBase<MannschaftEntity>
   {
     private MannschaftViewModel m_MannschaftViewModel;
     private SpielerViewModel m_SpielerViewModel;

@@ -29,7 +29,7 @@ namespace SportLeagueOverview.Core.Common
     #endregion
 
     #region [ExecuteReader]
-    public static List<T> ReadEntity<T>() where T : EntityBase
+    public static List<T> ReadEntity<T>()
     {
       string tmpColumnName = string.Empty;
       try
