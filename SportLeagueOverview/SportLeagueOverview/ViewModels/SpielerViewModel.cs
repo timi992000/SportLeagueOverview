@@ -33,10 +33,10 @@ namespace SportLeagueOverview.ViewModels
 
     public DateTime Geburtsdatum
     {
-      get => CurrentItem.Geburtsdatum != null ?  DateTime.Parse(CurrentItem.Geburtsdatum) : DateTime.Now;
+      get => CurrentItem.Geburtsdatum;
       set
       {
-        CurrentItem.Geburtsdatum = value.ToShortDateString();
+        CurrentItem.Geburtsdatum = value;
         OnPropertyChanged(nameof(Geburtsdatum));
       }
     }

@@ -54,6 +54,11 @@ namespace SportLeagueOverview.Core.Common
               var FieldValue = Reader.GetFieldValue<object>(i);
               if (FieldValue == DBNull.Value)
                 continue;
+              if(PropertyInfo.PropertyType == typeof(DateTime) && FieldValue.GetType() == typeof(string))
+              {
+                PropertyInfo.SetValue(Entity, Convert.ToDateTime(FieldValue));
+                continue;
+              }
               if (FieldValue.GetType() == typeof(long))
                 PropertyInfo.SetValue(Entity, Convert.ToInt32(FieldValue));
               else

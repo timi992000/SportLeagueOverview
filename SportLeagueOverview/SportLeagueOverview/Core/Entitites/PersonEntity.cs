@@ -1,4 +1,5 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 
 namespace SportLeagueOverview.Core.Entitites
 {
@@ -25,7 +26,7 @@ namespace SportLeagueOverview.Core.Entitites
     public int IsTrainer { get; set; }
 
     [DisplayName("Geburtsdatum")]
-    public string Geburtsdatum { get; set; }
+    public DateTime Geburtsdatum { get; set; }
 
     public string Bild { get; set; }
 
@@ -33,6 +34,6 @@ namespace SportLeagueOverview.Core.Entitites
     public int AdressId { get; set; }
 
     [DisplayName("Eintrittsdatum")]
-    public string Eintrittsdatum { get; set; }
+    public DateTime Eintrittsdatum { get; set; }
   }
 }

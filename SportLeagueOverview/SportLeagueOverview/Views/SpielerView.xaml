@@ -25,7 +25,7 @@
 
         <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
 
-        <Grid Margin="10 10" Grid.Column="2">
+        <Grid Margin="10 10" Grid.Column="2" x:Name="DetailView">
             <Grid.RowDefinitions>
                 <RowDefinition MaxHeight="35"/>
                 <RowDefinition MaxHeight="35"/>

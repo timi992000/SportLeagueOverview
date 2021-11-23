@@ -1,7 +1,6 @@
 ﻿using SportLeagueOverview.Core.Common;
 using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -27,6 +26,10 @@ namespace SportLeagueOverview.Core
       if (PropertyChanged != null)
       {
         PropertyChanged(this, new PropertyChangedEventArgs(PropertyName));
+        //if (!PropertyName.Equals(nameof(CurrentItems)))
+        //{
+        //  OnPropertyChanged(nameof(CurrentItems));
+        //}
       }
     }
 
@@ -35,7 +38,6 @@ namespace SportLeagueOverview.Core
       foreach (var Property in this.GetType().GetProperties())
       {
         OnPropertyChanged(Property.Name);
-        //m_ViewModel.GetType().GetMethod("OnPropertyChanged").Invoke(Property.Name, null);
       }
     }
     public List<T> CurrentItems
