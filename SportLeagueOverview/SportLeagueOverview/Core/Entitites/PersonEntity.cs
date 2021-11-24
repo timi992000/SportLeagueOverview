@@ -6,7 +6,7 @@ namespace SportLeagueOverview.Core.Entitites
   public class PersonEntity : EntityBase
   {
     public PersonEntity()
-      : base("Person")
+      : base("Person", "PersonId")
     {
     }
 

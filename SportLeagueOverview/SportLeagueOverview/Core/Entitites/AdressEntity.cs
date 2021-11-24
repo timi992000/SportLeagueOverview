@@ -3,7 +3,7 @@
   public class AdressEntity : EntityBase
   {
     public AdressEntity()
-      : base("Adresse")
+      : base("Adresse", "AdressId")
     {
     }
 

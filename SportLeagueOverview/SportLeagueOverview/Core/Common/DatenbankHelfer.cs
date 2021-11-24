@@ -81,6 +81,29 @@ namespace SportLeagueOverview.Core.Common
     }
     #endregion
 
+    public static bool DeleteEntity<T>(this T Entity)
+    {
+      try
+      {
+        var TableName = Entity.GetType().GetProperty("TableName").GetValue(Entity);
+        var PrimaryKeyColumn = Entity.GetType().GetProperty("PrimaryKeyColumn").GetValue(Entity);
+        var PrimaryKeyValue = Entity.GetType().GetProperty(PrimaryKeyColumn.ToString()).GetValue(Entity);
+        __OpenIfNeeded();
+        var Command = m_Connection.CreateCommand();
+        Command.CommandText = $"DELETE FROM {TableName} WHERE {PrimaryKeyColumn} = '{PrimaryKeyValue}'";
+        return !Convert.ToBoolean(Convert.ToInt16(Command.ExecuteScalar()));
+      }
+      catch (Exception ex)
+      {
+        __ThrowMessage(ex.ToString());
+        return false;
+      }
+      finally
+      {
+        m_Connection.Close();
+      }
+    }
+
     #region [ExecuteReader]
     public static DbDataReader ExecuteReader(string CommandText)
     {

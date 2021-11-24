@@ -4,7 +4,12 @@ namespace SportLeagueOverview.Core.Entitites
 {
   public class SpielEntity : EntityBase
   {
-    public int SpielID { get; set; }
+    public SpielEntity()
+  : base("Spiel", "SpielId")
+    {
+
+    }
+    public int SpielId { get; set; }
     public SpielStatus Status { get; set; }
     public DateTime Anpfiff { get; set; }
     public MannschaftEntity HeimMannschaft { get; set; }
@@ -12,11 +17,7 @@ namespace SportLeagueOverview.Core.Entitites
     public AdressEntity AustragungsOrt { get; set; }
 
     public void ÄndereStatus()
-    { }
-    public SpielEntity()
-  : base("Spiel")
     {
-
     }
   }
 }

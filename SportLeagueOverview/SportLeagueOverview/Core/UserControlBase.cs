@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Media;
 
 namespace SportLeagueOverview.Core
@@ -82,6 +83,19 @@ namespace SportLeagueOverview.Core
           DataGrid.IsReadOnly = true;
           DataGrid.SelectionMode = DataGridSelectionMode.Single;
           DataGrid.AutoGenerateColumns = true;
+          DataGrid.ContextMenu = new ContextMenu();
+
+
+          var DeleteMenuItem = new MenuItem ();
+          DeleteMenuItem.SetBinding(MenuItem.CommandProperty, "Delete");
+          DeleteMenuItem.Header = "Delete";
+
+          var ReloadMenuItem = new MenuItem();
+          ReloadMenuItem.SetBinding(MenuItem.CommandProperty, "Reload");
+          ReloadMenuItem.Header = "Reload";
+
+          DataGrid.ContextMenu.Items.Add(DeleteMenuItem);
+          DataGrid.ContextMenu.Items.Add(ReloadMenuItem);
         }
       }
     }
