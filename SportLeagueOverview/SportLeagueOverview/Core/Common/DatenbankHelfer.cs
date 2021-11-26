@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.Sqlite;
+using SportLeagueOverview.Core.Extender;
 using System;
 using System.Collections.Generic;
 using System.Data.Common;
@@ -88,6 +89,8 @@ namespace SportLeagueOverview.Core.Common
         var TableName = Entity.GetType().GetProperty("TableName").GetValue(Entity);
         var PrimaryKeyColumn = Entity.GetType().GetProperty("PrimaryKeyColumn").GetValue(Entity);
         var PrimaryKeyValue = Entity.GetType().GetProperty(PrimaryKeyColumn.ToString()).GetValue(Entity);
+        if (PrimaryKeyColumn.IsNullOrEmpty() || PrimaryKeyValue.IsNullOrEmpty())
+          return false;
         __OpenIfNeeded();
         var Command = m_Connection.CreateCommand();
         Command.CommandText = $"DELETE FROM {TableName} WHERE {PrimaryKeyColumn} = '{PrimaryKeyValue}'";
