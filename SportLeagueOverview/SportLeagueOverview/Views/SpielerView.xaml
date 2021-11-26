@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SportLeagueOverview.Views"
                                               xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls" 
-                       xmlns:controls="clr-namespace:SportLeagueOverview.Core.Controls"
+                       xmlns:controls="clr-namespace:SportLeagueOverview.Core.Controls" xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
                        mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
@@ -67,12 +67,26 @@
                     Grid.Column="1"
                     SelectedDate="{Binding Geburtsdatum, Mode=TwoWay}"/>
 
-        <Rectangle Grid.Row="0"
+        <!--<Rectangle Grid.Row="0"
                    Grid.RowSpan="5"
                    Grid.Column="3"
                    Fill="Green"
                    Height="180"
-                   Margin="0 0 0 5"/>
+                   Margin="0 0 0 5"/>-->
+            <StackPanel Grid.Row="0"
+                   Grid.RowSpan="5"
+                   Grid.Column="3">
+
+                <Button Content="Select Image"
+                    Command="{Binding SelectImage}"/>
+                <Image Source="{Binding ImageSource, Mode=TwoWay}">
+                    <b:Interaction.Triggers>
+                    <b:EventTrigger EventName="MouseDown">
+                        <b:InvokeCommandAction Command="{Binding SelectImage}"/>
+                    </b:EventTrigger>
+                </b:Interaction.Triggers>
+            </Image>
+            </StackPanel >
         </Grid>
     </Grid>
 </core:UserControlBase>

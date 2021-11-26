@@ -1,4 +1,5 @@
-﻿using SportLeagueOverview.Core.Common;
+﻿using Microsoft.Win32;
+using SportLeagueOverview.Core.Common;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -6,6 +7,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 
 namespace SportLeagueOverview.Core
 {
@@ -14,6 +16,7 @@ namespace SportLeagueOverview.Core
     private T m_CurrentItem;
     private T m_OriginalCurrentItem;
     private bool m_HasChanges;
+    private ImageSource m_ImageSource;
 
     public ViewModelBase(object ViewModel = null)
     {
@@ -27,6 +30,7 @@ namespace SportLeagueOverview.Core
       Delete = new DelegateCommand<object>(Execute_Delete);
       Reload = new DelegateCommand<object>(Execute_Reload);
       Cancel = new DelegateCommand<object>(Execute_Cancel);
+      SelectImage = new DelegateCommand<object>(Execute_SelectImage);
     }
 
     #region [Commands]
@@ -34,6 +38,7 @@ namespace SportLeagueOverview.Core
     public ICommand Delete { get; set; }
     public ICommand Reload { get; set; }
     public ICommand Cancel { get; set; }
+    public ICommand SelectImage { get; set; }
     #endregion
 
     public event PropertyChangedEventHandler PropertyChanged;
@@ -89,6 +94,19 @@ namespace SportLeagueOverview.Core
       }
     }
 
+    public ImageSource ImageSource
+    {
+      get
+      {
+        return m_ImageSource ?? default(ImageSource);
+      }
+      set
+      {
+        m_ImageSource = value;
+        OnPropertyChanged(nameof(ImageSource));
+      }
+    }
+
     public Brush HasChangesBrush => HasChanges ? Brushes.Red : Brushes.Black;
 
     public void Execute_Save(object sender)
@@ -121,6 +139,18 @@ namespace SportLeagueOverview.Core
       if (CurrentItems != null && CurrentItems.Any())
         CurrentItem = CurrentItems.FirstOrDefault();
       OnPropertyChanged(nameof(CurrentItems));
+    }
+
+    public void Execute_SelectImage(object sender)
+    {
+      OpenFileDialog OpenDlg = new OpenFileDialog
+      {
+        Filter = "Image Files(*.jpg; *.jpeg; *.gif; *.bmp; *.PNG)|*.jpg; *.jpeg; *.gif; *.bmp; *.PNG"
+      };
+      if (OpenDlg.ShowDialog() == true)
+      {
+        ImageSource = new BitmapImage(new Uri(OpenDlg.FileName));
+      }
     }
 
   }
