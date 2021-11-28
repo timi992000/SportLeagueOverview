@@ -67,7 +67,10 @@
                    Grid.Row="2"
                    Grid.Column="0"
                    Margin="0 0 0 5"/>
-            <TextBox Text="{Binding Trainer, Mode=TwoWay}" Grid.Row="2"
+            <ComboBox ItemsSource="{Binding Trainers}"
+                      SelectedItem="{Binding Trainer}"
+                      DisplayMemberPath="Name"
+                      Grid.Row="2"
                      Grid.Column="1"
                      Margin="0 0 0 5"/>
             <Rectangle Grid.Row="0"
@@ -82,7 +85,7 @@
                     </b:EventTrigger>
                 </b:Interaction.Triggers>
             </Rectangle>
-            <Button Content="Test123" 
+            <Button Content="Speichern" 
                     Command="{Binding Save}"
                     Grid.Row="4"
                     Grid.Column="0"/>

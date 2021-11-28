@@ -69,7 +69,9 @@ namespace SportLeagueOverview.Core
     {
       get
       {
-        return m_CurrentItem ?? Activator.CreateInstance<T>();
+        if (m_CurrentItem == null)
+          m_CurrentItem = Activator.CreateInstance<T>();
+        return m_CurrentItem;
       }
       set
       {
@@ -111,7 +113,10 @@ namespace SportLeagueOverview.Core
 
     public void Execute_Save(object sender)
     {
-
+      HasChanges = false;
+      DatenbankHelfer.SaveEntity(CurrentItem);
+      CurrentItem = Activator.CreateInstance<T>();
+      __DoReload();
     }
 
     public void Execute_Delete(object sender)
@@ -136,7 +141,7 @@ namespace SportLeagueOverview.Core
       if (HasChanges)
         return;
       CurrentItems = DatenbankHelfer.ReadEntity<T>();
-      if (CurrentItems != null && CurrentItems.Any())
+      if (CurrentItems != null)
         CurrentItem = CurrentItems.FirstOrDefault();
       OnPropertyChanged(nameof(CurrentItems));
     }
@@ -145,11 +150,13 @@ namespace SportLeagueOverview.Core
     {
       OpenFileDialog OpenDlg = new OpenFileDialog
       {
-        Filter = "Image Files(*.jpg; *.jpeg; *.gif; *.bmp; *.PNG)|*.jpg; *.jpeg; *.gif; *.bmp; *.PNG"
+        Filter = "All files|*.*|Bitmaps|*.bmp|PNG files|*.png|JPEG files|*.jpg|GIF files|*.gif|TIFF files|*.tif|Image files|*.bmp;*.jpg;*.gif;*.png;*.tif"
       };
       if (OpenDlg.ShowDialog() == true)
       {
-        ImageSource = new BitmapImage(new Uri(OpenDlg.FileName));
+        var Endings = new List<string> { ".bmp", ".png", ".jpg", ".jpeg", ".gif", ".tif" };
+        if(Endings.Any(y => OpenDlg.FileName.EndsWith(y, StringComparison.InvariantCultureIgnoreCase)))
+          ImageSource = new BitmapImage(new Uri(OpenDlg.FileName));
       }
     }
 

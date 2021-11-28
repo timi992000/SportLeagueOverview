@@ -14,6 +14,7 @@ namespace SportLeagueOverview.Core
     [DisplayName("Tabelle")]
     public string TableName { get; set; }
     public string PrimaryKeyColumn { get; set; }
+    public bool IsNew { get; set; }
 
     public object Clone()
     {

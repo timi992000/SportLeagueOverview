@@ -23,7 +23,7 @@ namespace SportLeagueOverview.Core.Entitites
     public int Rückennummer { get; set; }
 
     [DisplayName("Trainer?")]
-    public int IsTrainer { get; set; }
+    public bool IsTrainer { get; set; }
 
     [DisplayName("Geburtsdatum")]
     public DateTime Geburtsdatum { get; set; }

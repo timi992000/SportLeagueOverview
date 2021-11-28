@@ -41,5 +41,24 @@ namespace SportLeagueOverview.ViewModels
       }
     }
 
+    public bool IsTrainer
+    {
+      get => CurrentItem.IsTrainer;
+      set
+      {
+        CurrentItem.IsTrainer = value;
+      }
+    }
+
+    public DateTime Eintrittsdatum
+    {
+      get => CurrentItem.Eintrittsdatum;
+      set
+      {
+        CurrentItem.Eintrittsdatum = value;
+        OnPropertyChanged(nameof(Eintrittsdatum));
+      }
+    }
+
   }
 }

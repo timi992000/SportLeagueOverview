@@ -32,6 +32,7 @@
                 <RowDefinition MaxHeight="35"/>
                 <RowDefinition MaxHeight="35"/>
                 <RowDefinition MaxHeight="35"/>
+                <RowDefinition MaxHeight="35"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
@@ -40,52 +41,63 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-        <Label Content="Name"
+            <Label Content="Name"
                Grid.Row="0"
                Grid.Column="0"
                Margin="0 0 0 5"/>
-        <TextBox Text="{Binding SpielerName, Mode=TwoWay}"
+            <TextBox Text="{Binding SpielerName, Mode=TwoWay}"
                  Grid.Row="0"
                  Grid.Column="1"
                  Margin="0 0 0 5"/>
 
-        <Label Content="Rückennummer"
+            <Label Content="Rückennummer"
                Grid.Row="1"
                Grid.Column="0"
                Margin="0 0 0 5"/>
-        <controls:NumericBox Text="{Binding RückenNummer, Mode=TwoWay}"
+            <controls:NumericBox Text="{Binding RückenNummer, Mode=TwoWay}"
                  Grid.Row="1"
                  Grid.Column="1"
                  MaxLength="2"
                  Margin="0 0 0 5"/>
 
-        <Label Content="Geburtsdatum"
+            <Label Content="Geburtsdatum"
                Grid.Row="2"
                Grid.Column="0"
                Margin="0 0 0 5"/>
-        <DatePicker Grid.Row="2"
+            <DatePicker Grid.Row="2"
                     Grid.Column="1"
                     SelectedDate="{Binding Geburtsdatum, Mode=TwoWay}"/>
 
-        <!--<Rectangle Grid.Row="0"
-                   Grid.RowSpan="5"
-                   Grid.Column="3"
-                   Fill="Green"
-                   Height="180"
-                   Margin="0 0 0 5"/>-->
+            <Label Content="Eintrittsdatum"
+               Grid.Row="3"
+               Grid.Column="0"
+               Margin="0 0 0 5"/>
+            <DatePicker Grid.Row="3"
+                    Grid.Column="1"
+                    SelectedDate="{Binding Eintrittsdatum, Mode=TwoWay}"/>
+
+            <Label Content="Trainer?"
+               Grid.Row="4"
+               Grid.Column="0"
+               Margin="0 0 0 5"/>
+            <CheckBox Grid.Row="4"
+                    Grid.Column="1"
+                    IsChecked="{Binding IsTrainer, Mode=TwoWay}"/>
+
+            <Button Content="Speichern"
+                    Grid.Row="5"
+                    Command="{Binding Save}"/>
+
             <StackPanel Grid.Row="0"
                    Grid.RowSpan="5"
-                   Grid.Column="3">
+                   Grid.Column="3" Background="Gray">
 
-                <Button Content="Select Image"
-                    Command="{Binding SelectImage}"/>
-                <Image Source="{Binding ImageSource, Mode=TwoWay}">
                     <b:Interaction.Triggers>
-                    <b:EventTrigger EventName="MouseDown">
-                        <b:InvokeCommandAction Command="{Binding SelectImage}"/>
-                    </b:EventTrigger>
-                </b:Interaction.Triggers>
-            </Image>
+                        <b:EventTrigger EventName="MouseDown">
+                            <b:InvokeCommandAction Command="{Binding SelectImage}"/>
+                        </b:EventTrigger>
+                    </b:Interaction.Triggers>
+                <Image Source="{Binding ImageSource, Mode=TwoWay}"/>
             </StackPanel >
         </Grid>
     </Grid>
