@@ -9,6 +9,19 @@ namespace SportLeagueOverview.ViewModels
 
     public SpielerViewModel()
     {
+      ImageChanged += (sender, EventArgs) =>
+      {
+        OnPropertyChanged(nameof(ImageSource));
+      };
+      CurrentItemChanged += (sender, EventArgs) =>
+      {
+        DeserializeImage(CurrentItem.Bild);
+      };
+      SaveRequested += (sender, EventArgs) =>
+      {
+        CurrentItem.Bild = Convert.ToBase64String(SerializedImage);
+      };
+      DeserializeImage(CurrentItem.Bild);
     }
 
     public string SpielerName

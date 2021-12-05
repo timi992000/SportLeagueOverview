@@ -17,11 +17,17 @@ namespace SportLeagueOverview.ViewModels
       __RefreshTrainer();
       ImageChanged += (sender, EventArgs) =>
       {
-        OnPropertyChanged(nameof(MannschaftImageSource));
-        CurrentItem.Wappen = Convert.ToBase64String(SerializedImage);
+        OnPropertyChanged(nameof(ImageSource));
       };
+      CurrentItemChanged += (sender, EventArgs) =>
+      {
+        DeserializeImage(CurrentItem.Wappen);
+      };
+      SaveRequested += (sender, EventArgs) =>
+       {
+         CurrentItem.Wappen = Convert.ToBase64String(SerializedImage);
+       };
       DeserializeImage(CurrentItem.Wappen);
-      MannschaftImageSource = ImageSource;
     }
 
     public string MannschaftsName
@@ -41,22 +47,6 @@ namespace SportLeagueOverview.ViewModels
       {
         CurrentItem.Gruendungsjahr = value;
         OnPropertyChanged(nameof(GründungsJahr));
-      }
-    }
-
-    public ImageSource MannschaftImageSource
-    {
-      get
-      {
-        return ImageSource;
-      }
-      set
-      {
-        if (value != null)
-        {
-          ImageSource = value;
-          OnPropertyChanged(nameof(MannschaftImageSource));
-        }
       }
     }
 
