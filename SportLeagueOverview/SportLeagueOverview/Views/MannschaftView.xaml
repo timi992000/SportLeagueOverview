@@ -35,7 +35,7 @@
                 <RowDefinition MaxHeight="35"/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
+                <ColumnDefinition Width="Auto"/>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
@@ -73,18 +73,19 @@
                       Grid.Row="2"
                      Grid.Column="1"
                      Margin="0 0 0 5"/>
-            <Rectangle Grid.Row="0"
-                       Grid.RowSpan="4"
-                       Grid.Column="3"
-                       Fill="Green"
-                       Height="180"
-                       Margin="0 0 0 5">
+
+            <StackPanel Grid.Row="0"
+                       Grid.RowSpan="100"
+                       Grid.Column="3" Background="{Binding ImagePlaceholder}">
+
                 <b:Interaction.Triggers>
                     <b:EventTrigger EventName="MouseDown">
                         <b:InvokeCommandAction Command="{Binding SelectImage}"/>
                     </b:EventTrigger>
                 </b:Interaction.Triggers>
-            </Rectangle>
+                <Image Source="{Binding MannschaftImageSource, Mode=TwoWay}"/>
+            </StackPanel >
+
             <Button Content="Speichern" 
                     Command="{Binding Save}"
                     Grid.Row="4"

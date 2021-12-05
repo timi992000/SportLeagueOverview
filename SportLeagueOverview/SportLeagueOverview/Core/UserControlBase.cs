@@ -1,4 +1,5 @@
 ﻿using MahApps.Metro.Controls;
+using SportLeagueOverview.Core.Controls;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -27,6 +28,7 @@ namespace SportLeagueOverview.Core
     {
       //Update Controls and Set special things to it so u dont need to do it at all xaml controls
       __SetRulesForAllTextBoxes();
+      __SetRulesForAllNumericBoxes();
       __SetRulesForAllLabels();
       __SetRulesForAllDatePickers();
       __SetRulesForAllDataGrids();
@@ -56,6 +58,34 @@ namespace SportLeagueOverview.Core
           TextBox.Height = 22;
           TextBox.VerticalContentAlignment = VerticalAlignment.Center;
           TextBox.VerticalAlignment = VerticalAlignment.Top;
+        }
+      }
+    }
+
+    private void __SetRulesForAllNumericBoxes()
+    {
+      var NumericBoxes = FindVisualChildren<NumericBox>(this).ToList();
+      if (NumericBoxes.Any())
+      {
+        foreach (var NumericTextBox in NumericBoxes)
+        {
+          TextBoxHelper.SetClearTextButton(NumericTextBox, false);
+          NumericTextBox.TextChanged += (sender, eventArgs) =>
+          {
+            if (sender is NumericBox CastedNumericBox)
+            {
+              if (CastedNumericBox.Text != null && CastedNumericBox.Text.Length > 0)
+                TextBoxHelper.SetClearTextButton(CastedNumericBox, true);
+              else
+                TextBoxHelper.SetClearTextButton(CastedNumericBox, false);
+            }
+          };
+          TextBoxHelper.SetSelectAllOnFocus(NumericTextBox, true);
+          NumericTextBox.MaxHeight = 22;
+          NumericTextBox.Height = 22;
+          HorizontalAlignment = HorizontalAlignment.Stretch;
+          NumericTextBox.VerticalContentAlignment = VerticalAlignment.Center;
+          NumericTextBox.VerticalAlignment = VerticalAlignment.Top;
         }
       }
     }

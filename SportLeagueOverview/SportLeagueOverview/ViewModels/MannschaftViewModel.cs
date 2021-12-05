@@ -1,8 +1,10 @@
 ﻿using SportLeagueOverview.Core;
 using SportLeagueOverview.Core.Common;
 using SportLeagueOverview.Core.Entitites;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Media;
 
 namespace SportLeagueOverview.ViewModels
 {
@@ -13,6 +15,13 @@ namespace SportLeagueOverview.ViewModels
     public MannschaftViewModel()
     {
       __RefreshTrainer();
+      ImageChanged += (sender, EventArgs) =>
+      {
+        OnPropertyChanged(nameof(MannschaftImageSource));
+        CurrentItem.Wappen = Convert.ToBase64String(SerializedImage);
+      };
+      DeserializeImage(CurrentItem.Wappen);
+      MannschaftImageSource = ImageSource;
     }
 
     public string MannschaftsName
@@ -35,6 +44,22 @@ namespace SportLeagueOverview.ViewModels
       }
     }
 
+    public ImageSource MannschaftImageSource
+    {
+      get
+      {
+        return ImageSource;
+      }
+      set
+      {
+        if (value != null)
+        {
+          ImageSource = value;
+          OnPropertyChanged(nameof(MannschaftImageSource));
+        }
+      }
+    }
+
     public List<PersonEntity> Trainers
     {
       get
@@ -46,10 +71,10 @@ namespace SportLeagueOverview.ViewModels
 
     public PersonEntity Trainer
     {
-      get => m_Trainers.FirstOrDefault(x => x.PersonId ==  CurrentItem.TrainerId);
+      get => m_Trainers.FirstOrDefault(x => x.PersonId == CurrentItem.TrainerId);
       set
       {
-          CurrentItem.TrainerId = value.PersonId;
+        CurrentItem.TrainerId = value.PersonId;
         OnPropertyChanged(nameof(Trainer));
       }
     }

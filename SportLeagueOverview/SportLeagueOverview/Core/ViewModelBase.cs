@@ -1,8 +1,10 @@
 ﻿using Microsoft.Win32;
 using SportLeagueOverview.Core.Common;
+using SportLeagueOverview.Core.Extender;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Input;
@@ -17,6 +19,7 @@ namespace SportLeagueOverview.Core
     private T m_OriginalCurrentItem;
     private bool m_HasChanges;
     private ImageSource m_ImageSource;
+    public event EventHandler ImageChanged;
 
     public ViewModelBase(object ViewModel = null)
     {
@@ -105,11 +108,17 @@ namespace SportLeagueOverview.Core
       set
       {
         m_ImageSource = value;
+        SerializedImage = __SerializeImage();
         OnPropertyChanged(nameof(ImageSource));
+        OnPropertyChanged(nameof(ImagePlaceholder));
+        ImageChanged?.Invoke(this, new EventArgs());
       }
     }
 
+    public byte[] SerializedImage { get; set; }
+
     public Brush HasChangesBrush => HasChanges ? Brushes.Red : Brushes.Black;
+    public Brush ImagePlaceholder => ImageSource == null ? Brushes.Gray : Brushes.Transparent;
 
     public void Execute_Save(object sender)
     {
@@ -155,10 +164,32 @@ namespace SportLeagueOverview.Core
       if (OpenDlg.ShowDialog() == true)
       {
         var Endings = new List<string> { ".bmp", ".png", ".jpg", ".jpeg", ".gif", ".tif" };
-        if(Endings.Any(y => OpenDlg.FileName.EndsWith(y, StringComparison.InvariantCultureIgnoreCase)))
+        if (Endings.Any(y => OpenDlg.FileName.EndsWith(y, StringComparison.InvariantCultureIgnoreCase)))
+        {
           ImageSource = new BitmapImage(new Uri(OpenDlg.FileName));
+        }
       }
     }
 
+    private byte[] __SerializeImage()
+    {
+      if (ImageSource != null && ((BitmapImage)ImageSource).UriSource?.LocalPath != null)
+        return File.ReadAllBytes(((BitmapImage)ImageSource).UriSource.LocalPath);
+      return new byte[0];
+    }
+
+    public void DeserializeImage(string SourceFromDatabase)
+    {
+      if (SourceFromDatabase.IsNullOrEmpty())
+        return;
+      using (MemoryStream ms = new MemoryStream(Convert.FromBase64String(SourceFromDatabase)))
+      {
+        var imageSource = new BitmapImage();
+        imageSource.BeginInit();
+        imageSource.StreamSource = ms;
+        imageSource.EndInit();
+        ImageSource = imageSource;
+      }
+    }
   }
 }
