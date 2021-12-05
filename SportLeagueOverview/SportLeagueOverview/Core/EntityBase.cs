@@ -18,7 +18,7 @@ namespace SportLeagueOverview.Core
 
     public object Clone()
     {
-      return this;
+      return MemberwiseClone();
     }
   }
 }

@@ -23,20 +23,28 @@ namespace SportLeagueOverview.ViewModels
       {
         DeserializeImage(CurrentItem.Wappen);
       };
-      SaveRequested += (sender, EventArgs) =>
+      EntitySpectator.SaveRequested += (sender, EventArgs) =>
        {
          CurrentItem.Wappen = Convert.ToBase64String(SerializedImage);
        };
+      EntitySpectator.SaveCompleted += (sender, EventArgs) =>
+      {
+        __RefreshTrainer();
+      };
+      EntitySpectator.DeleteCompleted += (sender, EventArgs) =>
+      {
+        __RefreshTrainer();
+      };
       DeserializeImage(CurrentItem.Wappen);
     }
 
-    public string MannschaftsName
+    public string Name
     {
       get => CurrentItem.Name;
       set
       {
         CurrentItem.Name = value;
-        OnPropertyChanged(nameof(MannschaftsName));
+        OnPropertyChanged(nameof(CurrentItem.Name));
       }
     }
 
@@ -46,7 +54,7 @@ namespace SportLeagueOverview.ViewModels
       set
       {
         CurrentItem.Gruendungsjahr = value;
-        OnPropertyChanged(nameof(GründungsJahr));
+        OnPropertyChanged(nameof(CurrentItem.Gruendungsjahr));
       }
     }
 

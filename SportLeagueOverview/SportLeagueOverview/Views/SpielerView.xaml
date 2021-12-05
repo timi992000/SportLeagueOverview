@@ -56,7 +56,7 @@
                Grid.Row="1"
                Grid.Column="0"
                Margin="0 0 0 5"/>
-            <controls:NumericBox Text="{Binding RückenNummer, Mode=TwoWay}"
+            <controls:NumericBox Text="{Binding Rückennummer, Mode=TwoWay}"
                  Grid.Row="1"
                  Grid.Column="1"
                  MaxLength="2"
@@ -88,7 +88,8 @@
 
             <Button Content="Speichern"
                     Grid.Row="5"
-                    Command="{Binding Save}"/>
+                    Command="{Binding Save}"
+                    IsEnabled="{Binding HasChanges}"/>
 
             <StackPanel Grid.Row="0"
                    Grid.RowSpan="100"

@@ -17,7 +17,7 @@ namespace SportLeagueOverview.ViewModels
       {
         DeserializeImage(CurrentItem.Bild);
       };
-      SaveRequested += (sender, EventArgs) =>
+      EntitySpectator.SaveRequested += (sender, EventArgs) =>
       {
         CurrentItem.Bild = Convert.ToBase64String(SerializedImage);
       };
@@ -34,13 +34,13 @@ namespace SportLeagueOverview.ViewModels
       }
     }
 
-    public int RückenNummer
+    public int Rückennummer
     {
       get => CurrentItem.Rückennummer;
       set
       {
         CurrentItem.Rückennummer = value;
-        OnPropertyChanged(nameof(RückenNummer));
+        OnPropertyChanged(nameof(CurrentItem.Rückennummer));
       }
     }
 
@@ -50,7 +50,7 @@ namespace SportLeagueOverview.ViewModels
       set
       {
         CurrentItem.Geburtsdatum = value;
-        OnPropertyChanged(nameof(Geburtsdatum));
+        OnPropertyChanged(nameof(CurrentItem.Geburtsdatum));
       }
     }
 
@@ -60,6 +60,7 @@ namespace SportLeagueOverview.ViewModels
       set
       {
         CurrentItem.IsTrainer = value;
+        OnPropertyChanged(nameof(CurrentItem.IsTrainer));
       }
     }
 
@@ -69,7 +70,7 @@ namespace SportLeagueOverview.ViewModels
       set
       {
         CurrentItem.Eintrittsdatum = value;
-        OnPropertyChanged(nameof(Eintrittsdatum));
+        OnPropertyChanged(nameof(CurrentItem.Eintrittsdatum));
       }
     }
 
