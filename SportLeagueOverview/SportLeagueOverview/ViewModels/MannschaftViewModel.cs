@@ -81,6 +81,7 @@ namespace SportLeagueOverview.ViewModels
           return;
         CurrentItem.TrainerId = value.PersonId;
         OnPropertyChanged(nameof(Trainer));
+        OnPropertyChanged(nameof(CurrentItem.TrainerId));
       }
     }
 

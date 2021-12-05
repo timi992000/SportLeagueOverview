@@ -70,9 +70,17 @@
                     IsChecked="{Binding IsTrainer, Mode=TwoWay}"/>
 
         <Button Content="Speichern"
-                    Grid.Row="5"
-                    Command="{Binding Save}"
-                    IsEnabled="{Binding HasChanges}"/>
+                Grid.Row="5"
+                Grid.Column="0"
+                Command="{Binding Save}"
+                IsEnabled="{Binding HasChanges}"/>
+
+        <Button Content="Abbrechen" 
+                Command="{Binding Cancel}"
+                IsEnabled="{Binding HasChanges}"
+                Grid.Row="5"
+                Grid.Column="1"
+                Margin="10 0 0 0"/>
 
         <StackPanel Grid.Row="0"
                    Grid.RowSpan="100"

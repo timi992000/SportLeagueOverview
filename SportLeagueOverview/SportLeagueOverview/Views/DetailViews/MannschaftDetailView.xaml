@@ -76,5 +76,12 @@
                     IsEnabled="{Binding HasChanges}"
                     Grid.Row="4"
                     Grid.Column="0"/>
+
+        <Button Content="Abbrechen" 
+                Command="{Binding Cancel}"
+                IsEnabled="{Binding HasChanges}"
+                Grid.Row="4"
+                Grid.Column="1"
+                Margin="10 0 0 0"/>
     </Grid>
 </core:UserControlBase>

@@ -1,12 +1,10 @@
 ﻿using MahApps.Metro.Controls;
 using SportLeagueOverview.Core.Controls;
-using System;
+using SportLeagueOverview.Core.Extender;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Media;
 
 namespace SportLeagueOverview.Core
@@ -42,12 +40,12 @@ namespace SportLeagueOverview.Core
       {
         foreach (var TextBox in TextBoxes)
         {
-          TextBoxHelper.SetClearTextButton(TextBox, false);
+          TextBoxHelper.SetClearTextButton(TextBox, TextBox.Text.IsNullOrEmpty() ? false : true);
           TextBox.TextChanged += (sender, eventArgs) =>
           {
             if (sender is System.Windows.Controls.TextBox ChangedTextBox)
             {
-              if (ChangedTextBox.Text != null && ChangedTextBox.Text.Length > 0)
+              if (ChangedTextBox.Text.IsNotNullOrEmpty())
                 TextBoxHelper.SetClearTextButton(ChangedTextBox, true);
               else
                 TextBoxHelper.SetClearTextButton(ChangedTextBox, false);
@@ -116,7 +114,7 @@ namespace SportLeagueOverview.Core
           tmpDataGrid.AutoGenerateColumns = true;
           tmpDataGrid.ContextMenu = new ContextMenu();
 
-          var DeleteMenuItem = new MenuItem ();
+          var DeleteMenuItem = new MenuItem();
           DeleteMenuItem.SetBinding(MenuItem.CommandProperty, "Delete");
           DeleteMenuItem.Header = "Delete";
 

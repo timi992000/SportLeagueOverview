@@ -1,4 +1,6 @@
-﻿using Microsoft.Win32;
+﻿using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
+using Microsoft.Win32;
 using SportLeagueOverview.Core.Common;
 using SportLeagueOverview.Core.Entitites;
 using SportLeagueOverview.Core.Extender;
@@ -19,6 +21,7 @@ namespace SportLeagueOverview.Core
 {
   public class ViewModelBase<T> : INotifyPropertyChanged
   {
+    private MetroWindow MetroWnd;
     private T m_CurrentItem;
     private List<T> m_CurrentItems;
     private T m_OriginalCurrentItem;
@@ -34,6 +37,8 @@ namespace SportLeagueOverview.Core
     {
       __DoReload();
       __InitializeCommands();
+      if (Application.Current.MainWindow is MetroWindow tmpMetroWindow)
+        MetroWnd = tmpMetroWindow;
     }
 
     private void __InitializeCommands()
@@ -106,6 +111,9 @@ namespace SportLeagueOverview.Core
       }
       set
       {
+        if (HasChanges)
+          if (!__CancelRequested())
+            return;
         m_CurrentItem = value;
         m_OriginalCurrentItem = (T)(CurrentItem as EntityBase).Clone();
         OnPropertyChanged();
@@ -189,10 +197,13 @@ namespace SportLeagueOverview.Core
     public void Execute_Cancel(object sender)
     {
       CurrentItem = m_OriginalCurrentItem;
+      //CurrentItem = (T)(m_OriginalCurrentItem as EntityBase).Clone();
     }
 
     public void Execute_New(object sender)
     {
+      if (HasChanges)
+        return;
       IsNew = true;
       CurrentItem = Activator.CreateInstance<T>();
       CurrentItem.GetType().GetProperty("IsNew").SetValue(CurrentItem, true);
@@ -224,8 +235,11 @@ namespace SportLeagueOverview.Core
         CurrentItem = CurrentItems.FirstOrDefault();
         OnPropertyChanged(nameof(HasItems));
       };
+      m_NewDialog.Closing += (sender, e) =>
+      {
+        CurrentItem = CurrentItems.FirstOrDefault();
+      };
       m_NewDialog?.ShowDialog();
-      //m_NewDialog.Closing => 
     }
 
     private void __DoReload()
@@ -259,6 +273,16 @@ namespace SportLeagueOverview.Core
       if (ImageSource != null && ((BitmapImage)ImageSource).UriSource?.LocalPath != null)
         return File.ReadAllBytes(((BitmapImage)ImageSource).UriSource.LocalPath);
       return new byte[0];
+    }
+
+    private bool __CancelRequested()
+    {
+      var Messagetext = $"Das aktuell ausgewählte Element hat noch Änderungen, möchten Sie diese verwerfen?";
+      var CancelResult = DialogManager.ShowModalMessageExternal(MetroWnd, "Confirm taking offline", Messagetext, MessageDialogStyle.AffirmativeAndNegative);
+      if (CancelResult == MessageDialogResult.Canceled || CancelResult == MessageDialogResult.Negative)
+        return false;
+      else
+        return true;
     }
 
     public void DeserializeImage(string SourceFromDatabase)
