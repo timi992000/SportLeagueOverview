@@ -104,7 +104,7 @@ namespace SportLeagueOverview.Core.Common
         string Cmd = string.Empty;
         string Columns = string.Empty;
         string Values = string.Empty;
-        if (Convert.ToBoolean(Entity.GetType().GetProperty("IsNew").GetValue(Entity)))
+        if (!Convert.ToBoolean(Entity.GetType().GetProperty("IsNew").GetValue(Entity)))
         {
 
         }

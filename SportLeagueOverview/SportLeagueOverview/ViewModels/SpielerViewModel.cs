@@ -17,7 +17,7 @@ namespace SportLeagueOverview.ViewModels
       {
         DeserializeImage(CurrentItem.Bild);
       };
-      SaveRequested += (sender, EventArgs) =>
+      EntitySpectator.SaveRequested += (sender, EventArgs) =>
       {
         CurrentItem.Bild = Convert.ToBase64String(SerializedImage);
       };
@@ -34,23 +34,28 @@ namespace SportLeagueOverview.ViewModels
       }
     }
 
-    public int RückenNummer
+    public int Rückennummer
     {
       get => CurrentItem.Rückennummer;
       set
       {
         CurrentItem.Rückennummer = value;
-        OnPropertyChanged(nameof(RückenNummer));
+        OnPropertyChanged(nameof(CurrentItem.Rückennummer));
       }
     }
 
     public DateTime Geburtsdatum
     {
-      get => CurrentItem.Geburtsdatum;
+      get
+      {
+        if (CurrentItem.Geburtsdatum == default(DateTime))
+          CurrentItem.Geburtsdatum = DateTime.Now;
+        return CurrentItem.Geburtsdatum;
+      }
       set
       {
         CurrentItem.Geburtsdatum = value;
-        OnPropertyChanged(nameof(Geburtsdatum));
+        OnPropertyChanged(nameof(CurrentItem.Geburtsdatum));
       }
     }
 
@@ -60,16 +65,22 @@ namespace SportLeagueOverview.ViewModels
       set
       {
         CurrentItem.IsTrainer = value;
+        OnPropertyChanged(nameof(CurrentItem.IsTrainer));
       }
     }
 
     public DateTime Eintrittsdatum
     {
-      get => CurrentItem.Eintrittsdatum;
+      get
+      {
+        if (CurrentItem.Eintrittsdatum == default(DateTime))
+          CurrentItem.Eintrittsdatum = DateTime.Now;
+        return CurrentItem.Eintrittsdatum;
+      }
       set
       {
         CurrentItem.Eintrittsdatum = value;
-        OnPropertyChanged(nameof(Eintrittsdatum));
+        OnPropertyChanged(nameof(CurrentItem.Eintrittsdatum));
       }
     }
 
