@@ -50,7 +50,12 @@ namespace SportLeagueOverview.ViewModels
 
     public int GründungsJahr
     {
-      get => CurrentItem.Gruendungsjahr;
+      get
+      {
+        if (CurrentItem.Gruendungsjahr == 0)
+          CurrentItem.Gruendungsjahr = DateTime.Now.Year;
+        return CurrentItem.Gruendungsjahr;
+      }
       set
       {
         CurrentItem.Gruendungsjahr = value;
@@ -72,6 +77,8 @@ namespace SportLeagueOverview.ViewModels
       get => m_Trainers.FirstOrDefault(x => x.PersonId == CurrentItem.TrainerId);
       set
       {
+        if (value == null)
+          return;
         CurrentItem.TrainerId = value.PersonId;
         OnPropertyChanged(nameof(Trainer));
       }

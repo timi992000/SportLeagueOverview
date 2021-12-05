@@ -46,7 +46,12 @@ namespace SportLeagueOverview.ViewModels
 
     public DateTime Geburtsdatum
     {
-      get => CurrentItem.Geburtsdatum;
+      get
+      {
+        if (CurrentItem.Geburtsdatum == default(DateTime))
+          CurrentItem.Geburtsdatum = DateTime.Now;
+        return CurrentItem.Geburtsdatum;
+      }
       set
       {
         CurrentItem.Geburtsdatum = value;
@@ -66,7 +71,12 @@ namespace SportLeagueOverview.ViewModels
 
     public DateTime Eintrittsdatum
     {
-      get => CurrentItem.Eintrittsdatum;
+      get
+      {
+        if (CurrentItem.Eintrittsdatum == default(DateTime))
+          CurrentItem.Eintrittsdatum = DateTime.Now;
+        return CurrentItem.Eintrittsdatum;
+      }
       set
       {
         CurrentItem.Eintrittsdatum = value;

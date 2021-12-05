@@ -1,5 +1,6 @@
 ﻿using MahApps.Metro.Controls;
 using SportLeagueOverview.Core.Controls;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -108,13 +109,12 @@ namespace SportLeagueOverview.Core
       var AllDataGrids = FindVisualChildren<DataGrid>(this).ToList();
       if (AllDataGrids.Any())
       {
-        foreach (var DataGrid in AllDataGrids)
+        foreach (var tmpDataGrid in AllDataGrids)
         {
-          DataGrid.IsReadOnly = true;
-          DataGrid.SelectionMode = DataGridSelectionMode.Single;
-          DataGrid.AutoGenerateColumns = true;
-          DataGrid.ContextMenu = new ContextMenu();
-
+          tmpDataGrid.IsReadOnly = true;
+          tmpDataGrid.SelectionMode = DataGridSelectionMode.Single;
+          tmpDataGrid.AutoGenerateColumns = true;
+          tmpDataGrid.ContextMenu = new ContextMenu();
 
           var DeleteMenuItem = new MenuItem ();
           DeleteMenuItem.SetBinding(MenuItem.CommandProperty, "Delete");
@@ -124,8 +124,13 @@ namespace SportLeagueOverview.Core
           ReloadMenuItem.SetBinding(MenuItem.CommandProperty, "Reload");
           ReloadMenuItem.Header = "Reload";
 
-          DataGrid.ContextMenu.Items.Add(DeleteMenuItem);
-          DataGrid.ContextMenu.Items.Add(ReloadMenuItem);
+          var NewMenuItem = new MenuItem();
+          NewMenuItem.SetBinding(MenuItem.CommandProperty, "New");
+          NewMenuItem.Header = "New";
+
+          tmpDataGrid.ContextMenu.Items.Add(DeleteMenuItem);
+          tmpDataGrid.ContextMenu.Items.Add(ReloadMenuItem);
+          tmpDataGrid.ContextMenu.Items.Add(NewMenuItem);
         }
       }
     }
