@@ -1,11 +1,12 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 
 namespace SportLeagueOverview.Core.Entitites
 {
   public class PersonEntity : EntityBase
   {
     public PersonEntity()
-      : base("Person")
+      : base("Person", "PersonId")
     {
     }
 
@@ -22,10 +23,10 @@ namespace SportLeagueOverview.Core.Entitites
     public int Rückennummer { get; set; }
 
     [DisplayName("Trainer?")]
-    public int IsTrainer { get; set; }
+    public bool IsTrainer { get; set; }
 
     [DisplayName("Geburtsdatum")]
-    public string Geburtsdatum { get; set; }
+    public DateTime Geburtsdatum { get; set; }
 
     public string Bild { get; set; }
 
@@ -33,6 +34,6 @@ namespace SportLeagueOverview.Core.Entitites
     public int AdressId { get; set; }
 
     [DisplayName("Eintrittsdatum")]
-    public string Eintrittsdatum { get; set; }
+    public DateTime Eintrittsdatum { get; set; }
   }
 }

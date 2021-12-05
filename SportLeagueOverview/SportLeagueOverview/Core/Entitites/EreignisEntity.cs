@@ -3,7 +3,7 @@
   public class EreignisEntity : EntityBase
   {
     public EreignisEntity() :
-      base("Ereignis")
+      base("Ereignis", "EreignisId")
     {
     }
 

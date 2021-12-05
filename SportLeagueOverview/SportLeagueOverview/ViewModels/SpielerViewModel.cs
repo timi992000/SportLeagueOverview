@@ -9,6 +9,19 @@ namespace SportLeagueOverview.ViewModels
 
     public SpielerViewModel()
     {
+      ImageChanged += (sender, EventArgs) =>
+      {
+        OnPropertyChanged(nameof(ImageSource));
+      };
+      CurrentItemChanged += (sender, EventArgs) =>
+      {
+        DeserializeImage(CurrentItem.Bild);
+      };
+      SaveRequested += (sender, EventArgs) =>
+      {
+        CurrentItem.Bild = Convert.ToBase64String(SerializedImage);
+      };
+      DeserializeImage(CurrentItem.Bild);
     }
 
     public string SpielerName
@@ -33,11 +46,30 @@ namespace SportLeagueOverview.ViewModels
 
     public DateTime Geburtsdatum
     {
-      get => CurrentItem.Geburtsdatum != null ?  DateTime.Parse(CurrentItem.Geburtsdatum) : DateTime.Now;
+      get => CurrentItem.Geburtsdatum;
       set
       {
-        CurrentItem.Geburtsdatum = value.ToShortDateString();
+        CurrentItem.Geburtsdatum = value;
         OnPropertyChanged(nameof(Geburtsdatum));
+      }
+    }
+
+    public bool IsTrainer
+    {
+      get => CurrentItem.IsTrainer;
+      set
+      {
+        CurrentItem.IsTrainer = value;
+      }
+    }
+
+    public DateTime Eintrittsdatum
+    {
+      get => CurrentItem.Eintrittsdatum;
+      set
+      {
+        CurrentItem.Eintrittsdatum = value;
+        OnPropertyChanged(nameof(Eintrittsdatum));
       }
     }
 

@@ -1,9 +1,11 @@
 ﻿using MahApps.Metro.Controls;
+using SportLeagueOverview.Core.Controls;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Media;
 
 namespace SportLeagueOverview.Core
@@ -26,6 +28,7 @@ namespace SportLeagueOverview.Core
     {
       //Update Controls and Set special things to it so u dont need to do it at all xaml controls
       __SetRulesForAllTextBoxes();
+      __SetRulesForAllNumericBoxes();
       __SetRulesForAllLabels();
       __SetRulesForAllDatePickers();
       __SetRulesForAllDataGrids();
@@ -59,6 +62,34 @@ namespace SportLeagueOverview.Core
       }
     }
 
+    private void __SetRulesForAllNumericBoxes()
+    {
+      var NumericBoxes = FindVisualChildren<NumericBox>(this).ToList();
+      if (NumericBoxes.Any())
+      {
+        foreach (var NumericTextBox in NumericBoxes)
+        {
+          TextBoxHelper.SetClearTextButton(NumericTextBox, false);
+          NumericTextBox.TextChanged += (sender, eventArgs) =>
+          {
+            if (sender is NumericBox CastedNumericBox)
+            {
+              if (CastedNumericBox.Text != null && CastedNumericBox.Text.Length > 0)
+                TextBoxHelper.SetClearTextButton(CastedNumericBox, true);
+              else
+                TextBoxHelper.SetClearTextButton(CastedNumericBox, false);
+            }
+          };
+          TextBoxHelper.SetSelectAllOnFocus(NumericTextBox, true);
+          NumericTextBox.MaxHeight = 22;
+          NumericTextBox.Height = 22;
+          HorizontalAlignment = HorizontalAlignment.Stretch;
+          NumericTextBox.VerticalContentAlignment = VerticalAlignment.Center;
+          NumericTextBox.VerticalAlignment = VerticalAlignment.Top;
+        }
+      }
+    }
+
     private void __SetRulesForAllLabels()
     {
       var AllLabels = FindVisualChildren<Label>(this).ToList();
@@ -82,6 +113,19 @@ namespace SportLeagueOverview.Core
           DataGrid.IsReadOnly = true;
           DataGrid.SelectionMode = DataGridSelectionMode.Single;
           DataGrid.AutoGenerateColumns = true;
+          DataGrid.ContextMenu = new ContextMenu();
+
+
+          var DeleteMenuItem = new MenuItem ();
+          DeleteMenuItem.SetBinding(MenuItem.CommandProperty, "Delete");
+          DeleteMenuItem.Header = "Delete";
+
+          var ReloadMenuItem = new MenuItem();
+          ReloadMenuItem.SetBinding(MenuItem.CommandProperty, "Reload");
+          ReloadMenuItem.Header = "Reload";
+
+          DataGrid.ContextMenu.Items.Add(DeleteMenuItem);
+          DataGrid.ContextMenu.Items.Add(ReloadMenuItem);
         }
       }
     }

@@ -1,11 +1,12 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 
 namespace SportLeagueOverview.Core.Entitites
 {
   public class MannschaftEntity : EntityBase
   {
     public MannschaftEntity()
-      : base("Mannschaft")
+      : base("Mannschaft", "MannschaftId")
     {
     }
 

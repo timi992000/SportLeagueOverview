@@ -7,6 +7,24 @@
              mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid Margin="10 10">
-        <TextBlock Text="Comming Soon" />
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition />
+            <ColumnDefinition Width="5" />
+            <ColumnDefinition />
+        </Grid.ColumnDefinitions>
+        <ScrollViewer Grid.Column="0"
+                      HorizontalScrollBarVisibility="Auto"
+                      VerticalScrollBarVisibility="Auto">
+            <DataGrid ItemsSource="{Binding CurrentItems}"
+                      SelectedItem="{Binding CurrentItem}"
+                      AutoGeneratingColumn="DataGrid_AutoGeneratingColumn"/>
+        </ScrollViewer>
+
+
+        <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
+
+        <Grid Grid.Column="2" x:Name="DetailView">
+            
+        </Grid>
     </Grid>
 </core:UserControlBase>
