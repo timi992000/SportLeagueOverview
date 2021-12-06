@@ -210,7 +210,7 @@ namespace SportLeagueOverview.Core.Common
         Columns += characterDictionary["columnClose"];
         Values += characterDictionary["valuesClose"];
 
-        updateCommand = ""
+        updateCommand = "";
         //updateCommand += $"UPDATE {TableName} SET {Columns} WHERE {PrimaryKeyColumn} = {Values};
         var Result = ExecuteNonQuery(updateCommand);
 
