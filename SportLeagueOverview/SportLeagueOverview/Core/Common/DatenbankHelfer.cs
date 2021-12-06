@@ -9,8 +9,19 @@ using System.Windows;
 
 namespace SportLeagueOverview.Core.Common
 {
+
   public static class DatenbankHelfer
   {
+
+    static Dictionary<string, string> characterDictionary = new Dictionary<string, string>(){
+            {"columnOpen" ,"(" },
+            {"values", "VAlUES ("},
+            {"columnDot", "," },
+            {"valuesDot", ","},
+            {"columnClose", ")"},
+            {"valuesClose", ")"},
+
+        };
     private static SqliteConnection m_Connection;
 
     #region [Ctor]
@@ -91,18 +102,19 @@ namespace SportLeagueOverview.Core.Common
     {
       try
       {
-        var PrimaryKeyColumn = Entity.GetType().GetProperty("PrimaryKeyColumn").GetValue(Entity);
+        var PrimaryKeyColumn = Entity.GetEntity();
         string Cmd = string.Empty;
         string Columns = string.Empty;
         string Values = string.Empty;
-        if (Convert.ToBoolean(Entity.GetType().GetProperty("IsNew").GetValue(Entity)))
+        var isNew = Convert.ToBoolean(Entity.GetType().GetProperty("IsNew").GetValue(Entity));
+        if (!isNew)
         {
-
+          Entity.UpdateEntity();
         }
         else
         {
-          Columns += "(";
-          Values += "VALUES (";
+          Columns += characterDictionary["columnOpen"];
+          Values += characterDictionary["values"];
           var TableName = Entity.GetType().GetProperty("TableName").GetValue(Entity);
           var Properties = Entity.GetType().GetProperties(System.Reflection.BindingFlags.Public |
             System.Reflection.BindingFlags.Instance |
@@ -120,7 +132,7 @@ namespace SportLeagueOverview.Core.Common
                 continue;
               Values += $"{FieldValue}";
             }
-            else if(Property.PropertyType == typeof(bool))
+            else if (Property.PropertyType == typeof(bool))
             {
               Values += $"{Convert.ToInt32(FieldValue)}";
             }
@@ -129,14 +141,14 @@ namespace SportLeagueOverview.Core.Common
             Columns += Property.Name;
             if (i < Properties.Length)
             {
-              Columns += ",";
-              Values += ",";
+              Columns += characterDictionary["columnDot"];
+              Values += characterDictionary["valuesDot"];
             }
           }
           Columns = __RemoveEndingSeparator(Columns);
           Values = __RemoveEndingSeparator(Values);
-          Columns += ")";
-          Values += ")";
+          Columns += characterDictionary["columnClose"];
+          Values += characterDictionary["valuesClose"];
 
           Cmd += $"INSERT INTO {TableName} {Columns} {Values};";
           var Result = ExecuteNonQuery(Cmd);
@@ -148,6 +160,66 @@ namespace SportLeagueOverview.Core.Common
       }
     }
 
+    public static object GetEntity<T>(this T Entity)
+    {
+      return Entity.GetType().GetProperty("PrimaryKeyColumn").GetValue(Entity);
+    }
+
+    public static void UpdateEntity<T>(this T Entity)
+    {
+      try
+      {
+        var PrimaryKeyColumn = Entity.GetEntity();
+        var TableName = Entity.GetType().GetProperty("TableName").GetValue(Entity);
+        string updateCommand = string.Empty;
+        string Columns = string.Empty;
+        string Values = string.Empty;
+        var Properties = Entity.GetType().GetProperties(System.Reflection.BindingFlags.Public |
+              System.Reflection.BindingFlags.Instance |
+              System.Reflection.BindingFlags.DeclaredOnly);
+        Columns += characterDictionary["columnOpen"];
+        Values += characterDictionary["values"];
+        int i = 0;
+        foreach (var Property in Properties)
+        {
+          i++;
+          var FieldValue = Property.GetValue(Entity);
+          if (i > Properties.Length || Property.Name.Equals(PrimaryKeyColumn) || FieldValue.IsNullOrEmpty())
+            continue;
+          if (Property.PropertyType == typeof(int))
+          {
+            if (Convert.ToInt32(FieldValue) == 0)
+              continue;
+            Values += $"{FieldValue}";
+          }
+          else if (Property.PropertyType == typeof(bool))
+          {
+            Values += $"{Convert.ToInt32(FieldValue)}";
+          }
+          else
+            Values += $"'{FieldValue}'";
+          Columns += Property.Name;
+          if (i < Properties.Length)
+          {
+            Columns += characterDictionary["columnDot"];
+            Values += characterDictionary["valuesDot"];
+          }
+        }
+        Columns = __RemoveEndingSeparator(Columns);
+        Values = __RemoveEndingSeparator(Values);
+        Columns += characterDictionary["columnClose"];
+        Values += characterDictionary["valuesClose"];
+
+        updateCommand = ""
+        //updateCommand += $"UPDATE {TableName} SET {Columns} WHERE {PrimaryKeyColumn} = {Values};
+        var Result = ExecuteNonQuery(updateCommand);
+
+      }
+      catch (Exception ex)
+      {
+        __ThrowMessage(ex.ToString());
+      }
+    }
     private static string __RemoveEndingSeparator(string CommandText)
     {
       if (CommandText.EndsWith(","))
