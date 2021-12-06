@@ -76,10 +76,19 @@ namespace SportLeagueOverview.Core.Common
                 PropertyInfo.SetValue(Entity, Convert.ToBoolean(FieldValue));
                 continue;
               }
-              if (FieldValue.GetType() == typeof(long))
+              if (FieldValue.GetType() == typeof(long) || FieldValue.GetType() == typeof(int))
                 PropertyInfo.SetValue(Entity, Convert.ToInt32(FieldValue));
               else
-                PropertyInfo.SetValue(Entity, FieldValue);
+              {
+                if (FieldValue.GetType() == typeof(string) && PropertyInfo.PropertyType == typeof(int))
+                {
+                  FieldValue = FieldValue.ToString().IsNullOrEmpty() ? 0 : FieldValue;
+                  PropertyInfo.SetValue(Entity, Convert.ToInt32(FieldValue));
+                  continue;
+                }
+                else
+                  PropertyInfo.SetValue(Entity, FieldValue);
+              }
             }
           }
           Result.Add(Entity);
@@ -106,8 +115,7 @@ namespace SportLeagueOverview.Core.Common
         string Cmd = string.Empty;
         string Columns = string.Empty;
         string Values = string.Empty;
-        var isNew = Convert.ToBoolean(Entity.GetType().GetProperty("IsNew").GetValue(Entity));
-        if (!isNew)
+        if (!Convert.ToBoolean(Entity.GetType().GetProperty("IsNew").GetValue(Entity)))
         {
           Entity.UpdateEntity();
         }

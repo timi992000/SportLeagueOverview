@@ -1,8 +1,10 @@
 ﻿using SportLeagueOverview.Core;
 using SportLeagueOverview.Core.Common;
 using SportLeagueOverview.Core.Entitites;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Windows.Media;
 
 namespace SportLeagueOverview.ViewModels
 {
@@ -13,25 +15,51 @@ namespace SportLeagueOverview.ViewModels
     public MannschaftViewModel()
     {
       __RefreshTrainer();
+      ImageChanged += (sender, EventArgs) =>
+      {
+        OnPropertyChanged(nameof(ImageSource));
+      };
+      CurrentItemChanged += (sender, EventArgs) =>
+      {
+        DeserializeImage(CurrentItem.Wappen);
+      };
+      EntitySpectator.SaveRequested += (sender, EventArgs) =>
+       {
+         CurrentItem.Wappen = Convert.ToBase64String(SerializedImage);
+       };
+      EntitySpectator.SaveCompleted += (sender, EventArgs) =>
+      {
+        __RefreshTrainer();
+      };
+      EntitySpectator.DeleteCompleted += (sender, EventArgs) =>
+      {
+        __RefreshTrainer();
+      };
+      DeserializeImage(CurrentItem.Wappen);
     }
 
-    public string MannschaftsName
+    public string Name
     {
       get => CurrentItem.Name;
       set
       {
         CurrentItem.Name = value;
-        OnPropertyChanged(nameof(MannschaftsName));
+        OnPropertyChanged(nameof(CurrentItem.Name));
       }
     }
 
     public int GründungsJahr
     {
-      get => CurrentItem.Gruendungsjahr;
+      get
+      {
+        if (CurrentItem.Gruendungsjahr == 0)
+          CurrentItem.Gruendungsjahr = DateTime.Now.Year;
+        return CurrentItem.Gruendungsjahr;
+      }
       set
       {
         CurrentItem.Gruendungsjahr = value;
-        OnPropertyChanged(nameof(GründungsJahr));
+        OnPropertyChanged(nameof(CurrentItem.Gruendungsjahr));
       }
     }
 
@@ -46,11 +74,14 @@ namespace SportLeagueOverview.ViewModels
 
     public PersonEntity Trainer
     {
-      get => m_Trainers.FirstOrDefault(x => x.PersonId ==  CurrentItem.TrainerId);
+      get => m_Trainers.FirstOrDefault(x => x.PersonId == CurrentItem.TrainerId);
       set
       {
-          CurrentItem.TrainerId = value.PersonId;
+        if (value == null)
+          return;
+        CurrentItem.TrainerId = value.PersonId;
         OnPropertyChanged(nameof(Trainer));
+        OnPropertyChanged(nameof(CurrentItem.TrainerId));
       }
     }
 

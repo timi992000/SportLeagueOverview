@@ -5,7 +5,7 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:SportLeagueOverview.Views"
                                               xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls" 
-                       xmlns:controls="clr-namespace:SportLeagueOverview.Core.Controls" xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+                       xmlns:controls="clr-namespace:SportLeagueOverview.Core.Controls" xmlns:b="http://schemas.microsoft.com/xaml/behaviors" xmlns:detailviews="clr-namespace:SportLeagueOverview.Views.DetailViews"
                        mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
     <Grid>
@@ -25,80 +25,7 @@
 
         <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
 
-        <Grid Margin="10 10" Grid.Column="2" x:Name="DetailView">
-            <Grid.RowDefinitions>
-                <RowDefinition MaxHeight="35"/>
-                <RowDefinition MaxHeight="35"/>
-                <RowDefinition MaxHeight="35"/>
-                <RowDefinition MaxHeight="35"/>
-                <RowDefinition MaxHeight="35"/>
-                <RowDefinition MaxHeight="35"/>
-            </Grid.RowDefinitions>
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-                <ColumnDefinition/>
-            </Grid.ColumnDefinitions>
-            <Label Content="Name"
-               Grid.Row="0"
-               Grid.Column="0"
-               Margin="0 0 0 5"/>
-            <TextBox Text="{Binding SpielerName, Mode=TwoWay}"
-                 Grid.Row="0"
-                 Grid.Column="1"
-                 Margin="0 0 0 5"/>
+        <detailviews:SpielerDetailView  Grid.Column="2" />
 
-            <Label Content="Rückennummer"
-               Grid.Row="1"
-               Grid.Column="0"
-               Margin="0 0 0 5"/>
-            <controls:NumericBox Text="{Binding RückenNummer, Mode=TwoWay}"
-                 Grid.Row="1"
-                 Grid.Column="1"
-                 MaxLength="2"
-                 Margin="0 0 0 5"/>
-
-            <Label Content="Geburtsdatum"
-               Grid.Row="2"
-               Grid.Column="0"
-               Margin="0 0 0 5"/>
-            <DatePicker Grid.Row="2"
-                    Grid.Column="1"
-                    SelectedDate="{Binding Geburtsdatum, Mode=TwoWay}"/>
-
-            <Label Content="Eintrittsdatum"
-               Grid.Row="3"
-               Grid.Column="0"
-               Margin="0 0 0 5"/>
-            <DatePicker Grid.Row="3"
-                    Grid.Column="1"
-                    SelectedDate="{Binding Eintrittsdatum, Mode=TwoWay}"/>
-
-            <Label Content="Trainer?"
-               Grid.Row="4"
-               Grid.Column="0"
-               Margin="0 0 0 5"/>
-            <CheckBox Grid.Row="4"
-                    Grid.Column="1"
-                    IsChecked="{Binding IsTrainer, Mode=TwoWay}"/>
-
-            <Button Content="Speichern"
-                    Grid.Row="5"
-                    Command="{Binding Save}"/>
-
-            <StackPanel Grid.Row="0"
-                   Grid.RowSpan="5"
-                   Grid.Column="3" Background="Gray">
-
-                    <b:Interaction.Triggers>
-                        <b:EventTrigger EventName="MouseDown">
-                            <b:InvokeCommandAction Command="{Binding SelectImage}"/>
-                        </b:EventTrigger>
-                    </b:Interaction.Triggers>
-                <Image Source="{Binding ImageSource, Mode=TwoWay}"/>
-            </StackPanel >
-        </Grid>
     </Grid>
 </core:UserControlBase>

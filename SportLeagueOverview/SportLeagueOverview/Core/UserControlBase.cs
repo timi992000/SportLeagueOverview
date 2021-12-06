@@ -1,10 +1,10 @@
 ﻿using MahApps.Metro.Controls;
+using SportLeagueOverview.Core.Controls;
+using SportLeagueOverview.Core.Extender;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Media;
 
 namespace SportLeagueOverview.Core
@@ -27,6 +27,7 @@ namespace SportLeagueOverview.Core
     {
       //Update Controls and Set special things to it so u dont need to do it at all xaml controls
       __SetRulesForAllTextBoxes();
+      __SetRulesForAllNumericBoxes();
       __SetRulesForAllLabels();
       __SetRulesForAllDatePickers();
       __SetRulesForAllDataGrids();
@@ -39,12 +40,12 @@ namespace SportLeagueOverview.Core
       {
         foreach (var TextBox in TextBoxes)
         {
-          TextBoxHelper.SetClearTextButton(TextBox, false);
+          TextBoxHelper.SetClearTextButton(TextBox, TextBox.Text.IsNullOrEmpty() ? false : true);
           TextBox.TextChanged += (sender, eventArgs) =>
           {
             if (sender is System.Windows.Controls.TextBox ChangedTextBox)
             {
-              if (ChangedTextBox.Text != null && ChangedTextBox.Text.Length > 0)
+              if (ChangedTextBox.Text.IsNotNullOrEmpty())
                 TextBoxHelper.SetClearTextButton(ChangedTextBox, true);
               else
                 TextBoxHelper.SetClearTextButton(ChangedTextBox, false);
@@ -56,6 +57,34 @@ namespace SportLeagueOverview.Core
           TextBox.Height = 22;
           TextBox.VerticalContentAlignment = VerticalAlignment.Center;
           TextBox.VerticalAlignment = VerticalAlignment.Top;
+        }
+      }
+    }
+
+    private void __SetRulesForAllNumericBoxes()
+    {
+      var NumericBoxes = FindVisualChildren<NumericBox>(this).ToList();
+      if (NumericBoxes.Any())
+      {
+        foreach (var NumericTextBox in NumericBoxes)
+        {
+          TextBoxHelper.SetClearTextButton(NumericTextBox, false);
+          NumericTextBox.TextChanged += (sender, eventArgs) =>
+          {
+            if (sender is NumericBox CastedNumericBox)
+            {
+              if (CastedNumericBox.Text != null && CastedNumericBox.Text.Length > 0)
+                TextBoxHelper.SetClearTextButton(CastedNumericBox, true);
+              else
+                TextBoxHelper.SetClearTextButton(CastedNumericBox, false);
+            }
+          };
+          TextBoxHelper.SetSelectAllOnFocus(NumericTextBox, true);
+          NumericTextBox.MaxHeight = 22;
+          NumericTextBox.Height = 22;
+          HorizontalAlignment = HorizontalAlignment.Stretch;
+          NumericTextBox.VerticalContentAlignment = VerticalAlignment.Center;
+          NumericTextBox.VerticalAlignment = VerticalAlignment.Top;
         }
       }
     }
@@ -78,15 +107,14 @@ namespace SportLeagueOverview.Core
       var AllDataGrids = FindVisualChildren<DataGrid>(this).ToList();
       if (AllDataGrids.Any())
       {
-        foreach (var DataGrid in AllDataGrids)
+        foreach (var tmpDataGrid in AllDataGrids)
         {
-          DataGrid.IsReadOnly = true;
-          DataGrid.SelectionMode = DataGridSelectionMode.Single;
-          DataGrid.AutoGenerateColumns = true;
-          DataGrid.ContextMenu = new ContextMenu();
+          tmpDataGrid.IsReadOnly = true;
+          tmpDataGrid.SelectionMode = DataGridSelectionMode.Single;
+          tmpDataGrid.AutoGenerateColumns = true;
+          tmpDataGrid.ContextMenu = new ContextMenu();
 
-
-          var DeleteMenuItem = new MenuItem ();
+          var DeleteMenuItem = new MenuItem();
           DeleteMenuItem.SetBinding(MenuItem.CommandProperty, "Delete");
           DeleteMenuItem.Header = "Delete";
 
@@ -94,8 +122,13 @@ namespace SportLeagueOverview.Core
           ReloadMenuItem.SetBinding(MenuItem.CommandProperty, "Reload");
           ReloadMenuItem.Header = "Reload";
 
-          DataGrid.ContextMenu.Items.Add(DeleteMenuItem);
-          DataGrid.ContextMenu.Items.Add(ReloadMenuItem);
+          var NewMenuItem = new MenuItem();
+          NewMenuItem.SetBinding(MenuItem.CommandProperty, "New");
+          NewMenuItem.Header = "New";
+
+          tmpDataGrid.ContextMenu.Items.Add(DeleteMenuItem);
+          tmpDataGrid.ContextMenu.Items.Add(ReloadMenuItem);
+          tmpDataGrid.ContextMenu.Items.Add(NewMenuItem);
         }
       }
     }
