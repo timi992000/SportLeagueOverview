@@ -181,7 +181,8 @@ namespace SportLeagueOverview.Core.Common
         var PrimaryKeyValue = Entity.GetType().GetProperty(PrimaryKeyColumn).GetValue(Entity);
         var TableName = Entity.GetType().GetProperty("TableName").GetValue(Entity);
         var Cmd = string.Empty;
-        string ColumnValueString = "SET ";
+        var PropertyCmds = new List<string>();
+        string ColumnValueStrings = "SET ";
         var Properties = Entity.GetType().GetProperties(System.Reflection.BindingFlags.Public |
               System.Reflection.BindingFlags.Instance |
               System.Reflection.BindingFlags.DeclaredOnly);
@@ -196,21 +197,16 @@ namespace SportLeagueOverview.Core.Common
           {
             if (Convert.ToInt32(FieldValue) == 0)
               continue;
-            ColumnValueString += $"{Property.Name} = {FieldValue}, ";
+            PropertyCmds.Add($"{Property.Name} = {FieldValue}");
           }
           else if (Property.PropertyType == typeof(bool))
           {
-            ColumnValueString += $"{Property.Name} = {Convert.ToInt32(FieldValue)}, ";
+            PropertyCmds.Add($"{Property.Name} = {Convert.ToInt32(FieldValue)}");
           }
           else
-            ColumnValueString += $"{Property.Name} = '{FieldValue}'";
-          if (i < Properties.Length)
-          {
-            ColumnValueString += characterDictionary["valuesDot"];
-          }
+            PropertyCmds.Add($"{Property.Name} = '{FieldValue}'");
         }
-        ColumnValueString = __RemoveEndingSeparator(ColumnValueString);
-        Cmd = $"UPDATE {TableName} {ColumnValueString} WHERE {PrimaryKeyColumn} = {PrimaryKeyValue}";
+        Cmd = $"UPDATE {TableName} SET {string.Join(",", PropertyCmds)} WHERE {PrimaryKeyColumn} = {PrimaryKeyValue}";
         var Result = ExecuteNonQuery(Cmd);
       }
       catch (Exception ex)
@@ -218,12 +214,14 @@ namespace SportLeagueOverview.Core.Common
         __ThrowMessage(ex.ToString());
       }
     }
-    private static string __RemoveEndingSeparator(string CommandText)
+    private static string __RemoveEndingSeparator(string CommandText, bool FirstOnly = false)
     {
       CommandText = CommandText.Trim();
       if (CommandText.EndsWith(","))
         CommandText = CommandText.Substring(0, CommandText.Length - 1);
       CommandText = CommandText.Trim();
+      if (FirstOnly)
+        return CommandText;
       if (CommandText.EndsWith(","))
         CommandText = __RemoveEndingSeparator(CommandText);
       return CommandText;

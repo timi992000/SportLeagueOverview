@@ -115,7 +115,8 @@ namespace SportLeagueOverview.Core
           if (!__CancelRequested())
             return;
         m_CurrentItem = value;
-        m_OriginalCurrentItem = (T)(CurrentItem as EntityBase).Clone();
+        if(!IsNew)
+          m_OriginalCurrentItem = (T)(CurrentItem as EntityBase).Clone();
         OnPropertyChanged();
         OnCurrentItemChanged();
         HasChanges = false;
@@ -208,6 +209,7 @@ namespace SportLeagueOverview.Core
       CurrentItem = Activator.CreateInstance<T>();
       CurrentItem.GetType().GetProperty("IsNew").SetValue(CurrentItem, true);
       m_NewDialog = new Window();
+      m_NewDialog.Title = $"Neu - {typeof(T).Name}";
       var Type = CurrentItem.GetType();
       if (Type == typeof(AdressEntity))
       {
@@ -278,7 +280,7 @@ namespace SportLeagueOverview.Core
     private bool __CancelRequested()
     {
       var Messagetext = $"Das aktuell ausgewählte Element hat noch Änderungen, möchten Sie diese verwerfen?";
-      var CancelResult = DialogManager.ShowModalMessageExternal(MetroWnd, "Confirm taking offline", Messagetext, MessageDialogStyle.AffirmativeAndNegative);
+      var CancelResult = DialogManager.ShowModalMessageExternal(MetroWnd, "Änderungen verwerfen?", Messagetext, MessageDialogStyle.AffirmativeAndNegative);
       if (CancelResult == MessageDialogResult.Canceled || CancelResult == MessageDialogResult.Negative)
         return false;
       else
