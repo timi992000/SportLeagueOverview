@@ -111,7 +111,7 @@ namespace SportLeagueOverview.Core.Common
     {
       try
       {
-        var PrimaryKeyColumn = Entity.GetEntity();
+        var PrimaryKeyColumn = Entity.GetPrimaryKeyColumn();
         string Cmd = string.Empty;
         string Columns = string.Empty;
         string Values = string.Empty;
@@ -168,7 +168,7 @@ namespace SportLeagueOverview.Core.Common
       }
     }
 
-    public static object GetEntity<T>(this T Entity)
+    public static object GetPrimaryKeyColumn<T>(this T Entity)
     {
       return Entity.GetType().GetProperty("PrimaryKeyColumn").GetValue(Entity);
     }
@@ -177,16 +177,14 @@ namespace SportLeagueOverview.Core.Common
     {
       try
       {
-        var PrimaryKeyColumn = Entity.GetEntity();
+        var PrimaryKeyColumn = Entity.GetPrimaryKeyColumn().ToString();
+        var PrimaryKeyValue = Entity.GetType().GetProperty(PrimaryKeyColumn).GetValue(Entity);
         var TableName = Entity.GetType().GetProperty("TableName").GetValue(Entity);
-        string updateCommand = string.Empty;
-        string Columns = string.Empty;
-        string Values = string.Empty;
+        var Cmd = string.Empty;
+        string ColumnValueString = "SET ";
         var Properties = Entity.GetType().GetProperties(System.Reflection.BindingFlags.Public |
               System.Reflection.BindingFlags.Instance |
               System.Reflection.BindingFlags.DeclaredOnly);
-        Columns += characterDictionary["columnOpen"];
-        Values += characterDictionary["values"];
         int i = 0;
         foreach (var Property in Properties)
         {
@@ -198,30 +196,22 @@ namespace SportLeagueOverview.Core.Common
           {
             if (Convert.ToInt32(FieldValue) == 0)
               continue;
-            Values += $"{FieldValue}";
+            ColumnValueString += $"{Property.Name} = {FieldValue}, ";
           }
           else if (Property.PropertyType == typeof(bool))
           {
-            Values += $"{Convert.ToInt32(FieldValue)}";
+            ColumnValueString += $"{Property.Name} = {Convert.ToInt32(FieldValue)}, ";
           }
           else
-            Values += $"'{FieldValue}'";
-          Columns += Property.Name;
+            ColumnValueString += $"{Property.Name} = '{FieldValue}'";
           if (i < Properties.Length)
           {
-            Columns += characterDictionary["columnDot"];
-            Values += characterDictionary["valuesDot"];
+            ColumnValueString += characterDictionary["valuesDot"];
           }
         }
-        Columns = __RemoveEndingSeparator(Columns);
-        Values = __RemoveEndingSeparator(Values);
-        Columns += characterDictionary["columnClose"];
-        Values += characterDictionary["valuesClose"];
-
-        updateCommand = "";
-        //updateCommand += $"UPDATE {TableName} SET {Columns} WHERE {PrimaryKeyColumn} = {Values};
-        var Result = ExecuteNonQuery(updateCommand);
-
+        ColumnValueString = __RemoveEndingSeparator(ColumnValueString);
+        Cmd = $"UPDATE {TableName} {ColumnValueString} WHERE {PrimaryKeyColumn} = {PrimaryKeyValue}";
+        var Result = ExecuteNonQuery(Cmd);
       }
       catch (Exception ex)
       {
@@ -230,8 +220,12 @@ namespace SportLeagueOverview.Core.Common
     }
     private static string __RemoveEndingSeparator(string CommandText)
     {
+      CommandText = CommandText.Trim();
       if (CommandText.EndsWith(","))
         CommandText = CommandText.Substring(0, CommandText.Length - 1);
+      CommandText = CommandText.Trim();
+      if (CommandText.EndsWith(","))
+        CommandText = __RemoveEndingSeparator(CommandText);
       return CommandText;
     }
 
