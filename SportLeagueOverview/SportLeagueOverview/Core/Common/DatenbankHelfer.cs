@@ -9,8 +9,19 @@ using System.Windows;
 
 namespace SportLeagueOverview.Core.Common
 {
+
   public static class DatenbankHelfer
   {
+
+    static Dictionary<string, string> characterDictionary = new Dictionary<string, string>(){
+            {"columnOpen" ,"(" },
+            {"values", "VAlUES ("},
+            {"columnDot", "," },
+            {"valuesDot", ","},
+            {"columnClose", ")"},
+            {"valuesClose", ")"},
+
+        };
     private static SqliteConnection m_Connection;
 
     #region [Ctor]
@@ -100,18 +111,18 @@ namespace SportLeagueOverview.Core.Common
     {
       try
       {
-        var PrimaryKeyColumn = Entity.GetType().GetProperty("PrimaryKeyColumn").GetValue(Entity);
+        var PrimaryKeyColumn = Entity.GetPrimaryKeyColumn();
         string Cmd = string.Empty;
         string Columns = string.Empty;
         string Values = string.Empty;
         if (!Convert.ToBoolean(Entity.GetType().GetProperty("IsNew").GetValue(Entity)))
         {
-
+          Entity.UpdateEntity();
         }
         else
         {
-          Columns += "(";
-          Values += "VALUES (";
+          Columns += characterDictionary["columnOpen"];
+          Values += characterDictionary["values"];
           var TableName = Entity.GetType().GetProperty("TableName").GetValue(Entity);
           var Properties = Entity.GetType().GetProperties(System.Reflection.BindingFlags.Public |
             System.Reflection.BindingFlags.Instance |
@@ -138,14 +149,14 @@ namespace SportLeagueOverview.Core.Common
             Columns += Property.Name;
             if (i < Properties.Length)
             {
-              Columns += ",";
-              Values += ",";
+              Columns += characterDictionary["columnDot"];
+              Values += characterDictionary["valuesDot"];
             }
           }
           Columns = __RemoveEndingSeparator(Columns);
           Values = __RemoveEndingSeparator(Values);
-          Columns += ")";
-          Values += ")";
+          Columns += characterDictionary["columnClose"];
+          Values += characterDictionary["valuesClose"];
 
           Cmd += $"INSERT INTO {TableName} {Columns} {Values};";
           var Result = ExecuteNonQuery(Cmd);
@@ -157,10 +168,62 @@ namespace SportLeagueOverview.Core.Common
       }
     }
 
-    private static string __RemoveEndingSeparator(string CommandText)
+    public static object GetPrimaryKeyColumn<T>(this T Entity)
     {
+      return Entity.GetType().GetProperty("PrimaryKeyColumn").GetValue(Entity);
+    }
+
+    public static void UpdateEntity<T>(this T Entity)
+    {
+      try
+      {
+        var PrimaryKeyColumn = Entity.GetPrimaryKeyColumn().ToString();
+        var PrimaryKeyValue = Entity.GetType().GetProperty(PrimaryKeyColumn).GetValue(Entity);
+        var TableName = Entity.GetType().GetProperty("TableName").GetValue(Entity);
+        var Cmd = string.Empty;
+        var PropertyCmds = new List<string>();
+        string ColumnValueStrings = "SET ";
+        var Properties = Entity.GetType().GetProperties(System.Reflection.BindingFlags.Public |
+              System.Reflection.BindingFlags.Instance |
+              System.Reflection.BindingFlags.DeclaredOnly);
+        int i = 0;
+        foreach (var Property in Properties)
+        {
+          i++;
+          var FieldValue = Property.GetValue(Entity);
+          if (i > Properties.Length || Property.Name.Equals(PrimaryKeyColumn) || FieldValue.IsNullOrEmpty())
+            continue;
+          if (Property.PropertyType == typeof(int))
+          {
+            if (Convert.ToInt32(FieldValue) == 0)
+              continue;
+            PropertyCmds.Add($"{Property.Name} = {FieldValue}");
+          }
+          else if (Property.PropertyType == typeof(bool))
+          {
+            PropertyCmds.Add($"{Property.Name} = {Convert.ToInt32(FieldValue)}");
+          }
+          else
+            PropertyCmds.Add($"{Property.Name} = '{FieldValue}'");
+        }
+        Cmd = $"UPDATE {TableName} SET {string.Join(",", PropertyCmds)} WHERE {PrimaryKeyColumn} = {PrimaryKeyValue}";
+        var Result = ExecuteNonQuery(Cmd);
+      }
+      catch (Exception ex)
+      {
+        __ThrowMessage(ex.ToString());
+      }
+    }
+    private static string __RemoveEndingSeparator(string CommandText, bool FirstOnly = false)
+    {
+      CommandText = CommandText.Trim();
       if (CommandText.EndsWith(","))
         CommandText = CommandText.Substring(0, CommandText.Length - 1);
+      CommandText = CommandText.Trim();
+      if (FirstOnly)
+        return CommandText;
+      if (CommandText.EndsWith(","))
+        CommandText = __RemoveEndingSeparator(CommandText);
       return CommandText;
     }
 
