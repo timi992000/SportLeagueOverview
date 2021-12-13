@@ -15,18 +15,24 @@
             <ColumnDefinition Width="5" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="9*"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
         <ScrollViewer Grid.Column="0"
                       HorizontalScrollBarVisibility="Auto"
-                      VerticalScrollBarVisibility="Auto">
+                      VerticalScrollBarVisibility="Auto"
+                      Grid.RowSpan="2">
             <DataGrid ItemsSource="{Binding CurrentItems}"
                       SelectedItem="{Binding CurrentItem}"
                       AutoGeneratingColumn="DataGrid_AutoGeneratingColumn"/>
         </ScrollViewer>
 
 
-        <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
+        <GridSplitter Grid.Column="1" Width="5" Grid.RowSpan="2" HorizontalAlignment="Stretch" />
 
-        <detailviews:MannschaftDetailView Grid.Column="2"/>
-
+        <detailviews:MannschaftDetailView Grid.Column="2" Grid.Row="0"/>
+        
+        <local:DetailViewBottomContent Grid.Column="2" Grid.Row="1"/>
     </Grid>
 </core:UserControlBase>

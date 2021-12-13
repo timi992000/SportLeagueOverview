@@ -70,18 +70,5 @@
             </b:Interaction.Triggers>
             <Image Source="{Binding ImageSource, Mode=TwoWay}" Width="Auto" Height="Auto"/>
         </StackPanel >
-
-        <Button Content="Speichern" 
-                    Command="{Binding Save}"
-                    IsEnabled="{Binding HasChanges}"
-                    Grid.Row="4"
-                    Grid.Column="0"/>
-
-        <Button Content="Abbrechen" 
-                Command="{Binding Cancel}"
-                IsEnabled="{Binding HasChanges}"
-                Grid.Row="4"
-                Grid.Column="1"
-                Margin="10 0 0 0"/>
     </Grid>
 </core:UserControlBase>
