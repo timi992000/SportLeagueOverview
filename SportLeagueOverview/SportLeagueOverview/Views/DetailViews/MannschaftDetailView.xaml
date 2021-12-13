@@ -68,7 +68,11 @@
                     <b:InvokeCommandAction Command="{Binding SelectImage}"/>
                 </b:EventTrigger>
             </b:Interaction.Triggers>
-            <Image Source="{Binding Wappen, Mode=TwoWay}" Width="Auto" Height="Auto"/>
+            <Image Source="{Binding Wappen, Mode=TwoWay}" Width="Auto" Height="Auto">
+                <!--<Image.LayoutTransform>
+                    <ScaleTransform CenterX="0" ScaleX="35" ScaleY="35" />
+                </Image.LayoutTransform>-->
+            </Image>
         </StackPanel >
     </Grid>
 </core:UserControlBase>

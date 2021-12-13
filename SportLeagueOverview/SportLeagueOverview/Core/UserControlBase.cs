@@ -1,6 +1,8 @@
 ﻿using MahApps.Metro.Controls;
 using SportLeagueOverview.Core.Controls;
+using SportLeagueOverview.Core.Events;
 using SportLeagueOverview.Core.Extender;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -14,6 +16,10 @@ namespace SportLeagueOverview.Core
     public UserControlBase()
     {
       Loaded += UserControlBase_Loaded;
+      KeyDown += (sender, e) =>
+      {
+        GlobalEventManager.InvokeKeyPressed(sender, e);
+      };
     }
 
     private void UserControlBase_Loaded(object sender, RoutedEventArgs e)
