@@ -16,8 +16,8 @@
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
-            <RowDefinition Height="9*"/>
-            <RowDefinition Height="1*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition MaxHeight="50"/>
         </Grid.RowDefinitions>
         <ScrollViewer Grid.Column="0"
                       HorizontalScrollBarVisibility="Auto"
