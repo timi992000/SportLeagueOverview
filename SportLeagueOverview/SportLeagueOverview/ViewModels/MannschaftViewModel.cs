@@ -15,27 +15,7 @@ namespace SportLeagueOverview.ViewModels
     public MannschaftViewModel()
     {
       __RefreshTrainer();
-      ImageChanged += (sender, EventArgs) =>
-      {
-        OnPropertyChanged(nameof(ImageSource));
-      };
-      CurrentItemChanged += (sender, EventArgs) =>
-      {
-        DeserializeImage(CurrentItem.Wappen);
-      };
-      EntitySpectator.SaveRequested += (sender, EventArgs) =>
-       {
-         CurrentItem.Wappen = Convert.ToBase64String(SerializedImage);
-       };
-      EntitySpectator.SaveCompleted += (sender, EventArgs) =>
-      {
-        __RefreshTrainer();
-      };
-      EntitySpectator.DeleteCompleted += (sender, EventArgs) =>
-      {
-        __RefreshTrainer();
-      };
-      DeserializeImage(CurrentItem.Wappen);
+      __AttachEvents();
     }
 
     public string Name
@@ -45,6 +25,16 @@ namespace SportLeagueOverview.ViewModels
       {
         CurrentItem.Name = value;
         OnPropertyChanged(nameof(CurrentItem.Name));
+      }
+    }
+
+    public ImageSource Wappen
+    {
+      get => DeserializeImage(CurrentItem.Wappen);
+      set
+      {
+        CurrentItem.Wappen = SerializeImage(value);
+        OnPropertyChanged(nameof(CurrentItem.Wappen));
       }
     }
 
@@ -74,7 +64,7 @@ namespace SportLeagueOverview.ViewModels
 
     public PersonEntity Trainer
     {
-      get => m_Trainers.FirstOrDefault(x => x.PersonId == CurrentItem.TrainerId);
+      get => Trainers.FirstOrDefault(x => x.PersonId == CurrentItem.TrainerId);
       set
       {
         if (value == null)
@@ -85,10 +75,27 @@ namespace SportLeagueOverview.ViewModels
       }
     }
 
+    private void __AttachEvents()
+    {
+      ImageSelected += (sender, e) =>
+      {
+        Wappen = (ImageSource)sender;
+      };
+      EntitySpectator.SaveCompleted += (sender, EventArgs) =>
+      {
+        __RefreshTrainer();
+      };
+      EntitySpectator.DeleteCompleted += (sender, EventArgs) =>
+      {
+        __RefreshTrainer();
+      };
+    }
+
     private void __RefreshTrainer()
     {
       m_Trainers = DatenbankHelfer.ReadEntity<PersonEntity>().Where(x => x.IsTrainer).ToList();
       OnPropertyChanged(nameof(Trainers));
+      OnPropertyChanged(nameof(Trainer));
     }
   }
 }

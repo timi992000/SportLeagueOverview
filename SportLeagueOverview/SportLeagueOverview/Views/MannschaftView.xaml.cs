@@ -26,7 +26,9 @@ namespace SportLeagueOverview.Views
       }
       e.Column.Header = ((PropertyDescriptor)e.PropertyDescriptor).DisplayName;
       if (e.Column.Header.Equals("Wappen") ||
-        e.Column.Header.Equals("Tabelle"))
+        e.Column.Header.Equals("Tabelle")||
+        e.Column.Header.Equals("PrimaryKeyColumn") ||
+          e.Column.Header.Equals("IsNew"))
       {
         e.Cancel = true;
       }

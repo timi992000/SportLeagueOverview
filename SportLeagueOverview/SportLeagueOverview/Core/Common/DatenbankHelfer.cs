@@ -9,6 +9,7 @@ using System.Windows;
 
 namespace SportLeagueOverview.Core.Common
 {
+
   public static class DatenbankHelfer
   {
     private static SqliteConnection m_Connection;
@@ -100,13 +101,13 @@ namespace SportLeagueOverview.Core.Common
     {
       try
       {
-        var PrimaryKeyColumn = Entity.GetType().GetProperty("PrimaryKeyColumn").GetValue(Entity);
+        var PrimaryKeyColumn = Entity.GetPrimaryKeyColumn();
         string Cmd = string.Empty;
         string Columns = string.Empty;
         string Values = string.Empty;
         if (!Convert.ToBoolean(Entity.GetType().GetProperty("IsNew").GetValue(Entity)))
         {
-
+          Entity.UpdateEntity();
         }
         else
         {
@@ -157,10 +158,61 @@ namespace SportLeagueOverview.Core.Common
       }
     }
 
-    private static string __RemoveEndingSeparator(string CommandText)
+    public static object GetPrimaryKeyColumn<T>(this T Entity)
     {
+      return Entity.GetType().GetProperty("PrimaryKeyColumn").GetValue(Entity);
+    }
+
+    public static void UpdateEntity<T>(this T Entity)
+    {
+      try
+      {
+        var PrimaryKeyColumn = Entity.GetPrimaryKeyColumn().ToString();
+        var PrimaryKeyValue = Entity.GetType().GetProperty(PrimaryKeyColumn).GetValue(Entity);
+        var TableName = Entity.GetType().GetProperty("TableName").GetValue(Entity);
+        var Cmd = string.Empty;
+        var PropertyCmds = new List<string>();
+        var Properties = Entity.GetType().GetProperties(System.Reflection.BindingFlags.Public |
+              System.Reflection.BindingFlags.Instance |
+              System.Reflection.BindingFlags.DeclaredOnly);
+        int i = 0;
+        foreach (var Property in Properties)
+        {
+          i++;
+          var FieldValue = Property.GetValue(Entity);
+          if (i > Properties.Length || Property.Name.Equals(PrimaryKeyColumn) || FieldValue.IsNullOrEmpty())
+            continue;
+          if (Property.PropertyType == typeof(int))
+          {
+            if (Convert.ToInt32(FieldValue) == 0)
+              continue;
+            PropertyCmds.Add($"{Property.Name} = {FieldValue}");
+          }
+          else if (Property.PropertyType == typeof(bool))
+          {
+            PropertyCmds.Add($"{Property.Name} = {Convert.ToInt32(FieldValue)}");
+          }
+          else
+            PropertyCmds.Add($"{Property.Name} = '{FieldValue}'");
+        }
+        Cmd = $"UPDATE {TableName} SET {string.Join(",", PropertyCmds)} WHERE {PrimaryKeyColumn} = {PrimaryKeyValue}";
+        var Result = ExecuteNonQuery(Cmd);
+      }
+      catch (Exception ex)
+      {
+        __ThrowMessage(ex.ToString());
+      }
+    }
+    private static string __RemoveEndingSeparator(string CommandText, bool FirstOnly = false)
+    {
+      CommandText = CommandText.Trim();
       if (CommandText.EndsWith(","))
         CommandText = CommandText.Substring(0, CommandText.Length - 1);
+      CommandText = CommandText.Trim();
+      if (FirstOnly)
+        return CommandText;
+      if (CommandText.EndsWith(","))
+        CommandText = __RemoveEndingSeparator(CommandText);
       return CommandText;
     }
 
@@ -283,10 +335,10 @@ namespace SportLeagueOverview.Core.Common
         "(\"MannschaftId\"),	FOREIGN KEY(\"SpielerId\") REFERENCES \"Person\"(\"PersonId\"),	PRIMARY KEY(\"EreignisId\" AUTOINCREMENT)); ";
 
       Cmd += "CREATE TABLE IF NOT EXISTS \"Mannschaft\" (  \"MannschaftId\"  INTEGER NOT NULL UNIQUE,  \"Name\"  TEXT NOT NULL,	\"Gruendungsjahr\"  INTEGER," +
-        "	\"Wappen\"  TEXT,	\"TrainerId\" INTEGER,	FOREIGN KEY(\"TrainerId\") REFERENCES \"Person\"(\"PersonId\"),	PRIMARY KEY(\"MannschaftId\" AUTOINCREMENT)); ";
+        "	\"Wappen\"  BLOB,	\"TrainerId\" INTEGER,	FOREIGN KEY(\"TrainerId\") REFERENCES \"Person\"(\"PersonId\"),	PRIMARY KEY(\"MannschaftId\" AUTOINCREMENT)); ";
 
       Cmd += "CREATE TABLE IF NOT EXISTS \"Person\" (  \"PersonId\"  INTEGER NOT NULL UNIQUE,  \"Name\"  TEXT,	\"AktuelleMannId\"  INTEGER,	\"Rückennummer\"  INTEGER,	\"IsTrainer\"" +
-        " INTEGER NOT NULL,	\"Geburtsdatum\"  TEXT,	\"Bild\"  TEXT,	\"AdressId\"  INTEGER,	\"Eintrittsdatum\"  TEXT,	PRIMARY KEY(\"PersonId\" AUTOINCREMENT),	FOREIGN KEY(\"AktuelleMannId\") REFERENCES \"Mannschaft\"" +
+        " INTEGER NOT NULL,	\"Geburtsdatum\"  TEXT,	\"Bild\"  BLOB,	\"AdressId\"  INTEGER,	\"Eintrittsdatum\"  TEXT,	PRIMARY KEY(\"PersonId\" AUTOINCREMENT),	FOREIGN KEY(\"AktuelleMannId\") REFERENCES \"Mannschaft\"" +
         "(\"MannschaftId\")); ";
 
       Cmd += "CREATE TABLE IF NOT EXISTS \"Spiel\" ( \"SpielId\" INTEGER NOT NULL UNIQUE, \"Status\"  INTEGER NOT NULL, \"Anpfiff\" TEXT," +
@@ -298,10 +350,16 @@ namespace SportLeagueOverview.Core.Common
     }
     #endregion
 
+    public static bool CheckTrainerIsUsed(int TrainerId)
+    {
+      var Cmd = $"SELECT Count(*) FROM Mannschaft WHERE TrainerId = {TrainerId}";
+      return Convert.ToBoolean(ExecuteScalar(Cmd));
+    }
+
     #region [__ThrowMessage]
     private static void __ThrowMessage(string Message)
     {
-      MessageBox.Show(Message, "Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+      MessageBox.Show(Message, "Fehlgeschlagen", MessageBoxButton.OK, MessageBoxImage.Error);
     }
     #endregion
 

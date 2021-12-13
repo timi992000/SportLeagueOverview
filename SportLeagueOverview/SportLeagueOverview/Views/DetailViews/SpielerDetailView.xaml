@@ -91,7 +91,7 @@
                     <b:InvokeCommandAction Command="{Binding SelectImage}"/>
                 </b:EventTrigger>
             </b:Interaction.Triggers>
-            <Image Source="{Binding ImageSource, Mode=TwoWay}"/>
+            <Image Source="{Binding Bild, Mode=TwoWay}"/>
         </StackPanel >
     </Grid>
 </core:UserControlBase>
