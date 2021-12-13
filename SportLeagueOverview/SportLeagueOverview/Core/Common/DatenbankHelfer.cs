@@ -12,16 +12,6 @@ namespace SportLeagueOverview.Core.Common
 
   public static class DatenbankHelfer
   {
-
-    static Dictionary<string, string> characterDictionary = new Dictionary<string, string>(){
-            {"columnOpen" ,"(" },
-            {"values", "VAlUES ("},
-            {"columnDot", "," },
-            {"valuesDot", ","},
-            {"columnClose", ")"},
-            {"valuesClose", ")"},
-
-        };
     private static SqliteConnection m_Connection;
 
     #region [Ctor]
@@ -121,8 +111,8 @@ namespace SportLeagueOverview.Core.Common
         }
         else
         {
-          Columns += characterDictionary["columnOpen"];
-          Values += characterDictionary["values"];
+          Columns += "(";
+          Values += "VALUES (";
           var TableName = Entity.GetType().GetProperty("TableName").GetValue(Entity);
           var Properties = Entity.GetType().GetProperties(System.Reflection.BindingFlags.Public |
             System.Reflection.BindingFlags.Instance |
@@ -149,14 +139,14 @@ namespace SportLeagueOverview.Core.Common
             Columns += Property.Name;
             if (i < Properties.Length)
             {
-              Columns += characterDictionary["columnDot"];
-              Values += characterDictionary["valuesDot"];
+              Columns += ",";
+              Values += ",";
             }
           }
           Columns = __RemoveEndingSeparator(Columns);
           Values = __RemoveEndingSeparator(Values);
-          Columns += characterDictionary["columnClose"];
-          Values += characterDictionary["valuesClose"];
+          Columns += ")";
+          Values += ")";
 
           Cmd += $"INSERT INTO {TableName} {Columns} {Values};";
           var Result = ExecuteNonQuery(Cmd);
@@ -182,7 +172,6 @@ namespace SportLeagueOverview.Core.Common
         var TableName = Entity.GetType().GetProperty("TableName").GetValue(Entity);
         var Cmd = string.Empty;
         var PropertyCmds = new List<string>();
-        string ColumnValueStrings = "SET ";
         var Properties = Entity.GetType().GetProperties(System.Reflection.BindingFlags.Public |
               System.Reflection.BindingFlags.Instance |
               System.Reflection.BindingFlags.DeclaredOnly);
@@ -346,10 +335,10 @@ namespace SportLeagueOverview.Core.Common
         "(\"MannschaftId\"),	FOREIGN KEY(\"SpielerId\") REFERENCES \"Person\"(\"PersonId\"),	PRIMARY KEY(\"EreignisId\" AUTOINCREMENT)); ";
 
       Cmd += "CREATE TABLE IF NOT EXISTS \"Mannschaft\" (  \"MannschaftId\"  INTEGER NOT NULL UNIQUE,  \"Name\"  TEXT NOT NULL,	\"Gruendungsjahr\"  INTEGER," +
-        "	\"Wappen\"  TEXT,	\"TrainerId\" INTEGER,	FOREIGN KEY(\"TrainerId\") REFERENCES \"Person\"(\"PersonId\"),	PRIMARY KEY(\"MannschaftId\" AUTOINCREMENT)); ";
+        "	\"Wappen\"  BLOB,	\"TrainerId\" INTEGER,	FOREIGN KEY(\"TrainerId\") REFERENCES \"Person\"(\"PersonId\"),	PRIMARY KEY(\"MannschaftId\" AUTOINCREMENT)); ";
 
       Cmd += "CREATE TABLE IF NOT EXISTS \"Person\" (  \"PersonId\"  INTEGER NOT NULL UNIQUE,  \"Name\"  TEXT,	\"AktuelleMannId\"  INTEGER,	\"Rückennummer\"  INTEGER,	\"IsTrainer\"" +
-        " INTEGER NOT NULL,	\"Geburtsdatum\"  TEXT,	\"Bild\"  TEXT,	\"AdressId\"  INTEGER,	\"Eintrittsdatum\"  TEXT,	PRIMARY KEY(\"PersonId\" AUTOINCREMENT),	FOREIGN KEY(\"AktuelleMannId\") REFERENCES \"Mannschaft\"" +
+        " INTEGER NOT NULL,	\"Geburtsdatum\"  TEXT,	\"Bild\"  BLOB,	\"AdressId\"  INTEGER,	\"Eintrittsdatum\"  TEXT,	PRIMARY KEY(\"PersonId\" AUTOINCREMENT),	FOREIGN KEY(\"AktuelleMannId\") REFERENCES \"Mannschaft\"" +
         "(\"MannschaftId\")); ";
 
       Cmd += "CREATE TABLE IF NOT EXISTS \"Spiel\" ( \"SpielId\" INTEGER NOT NULL UNIQUE, \"Status\"  INTEGER NOT NULL, \"Anpfiff\" TEXT," +
@@ -361,10 +350,16 @@ namespace SportLeagueOverview.Core.Common
     }
     #endregion
 
+    public static bool CheckTrainerIsUsed(int TrainerId)
+    {
+      var Cmd = $"SELECT Count(*) FROM Mannschaft WHERE TrainerId = {TrainerId}";
+      return Convert.ToBoolean(ExecuteScalar(Cmd));
+    }
+
     #region [__ThrowMessage]
     private static void __ThrowMessage(string Message)
     {
-      MessageBox.Show(Message, "Failed", MessageBoxButton.OK, MessageBoxImage.Error);
+      MessageBox.Show(Message, "Fehlgeschlagen", MessageBoxButton.OK, MessageBoxImage.Error);
     }
     #endregion
 
