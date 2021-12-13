@@ -1,6 +1,8 @@
 ﻿using SportLeagueOverview.Core;
+using SportLeagueOverview.Core.Common;
 using SportLeagueOverview.Core.Entitites;
 using System;
+using System.Windows.Media;
 
 namespace SportLeagueOverview.ViewModels
 {
@@ -9,19 +11,7 @@ namespace SportLeagueOverview.ViewModels
 
     public SpielerViewModel()
     {
-      ImageChanged += (sender, EventArgs) =>
-      {
-        OnPropertyChanged(nameof(ImageSource));
-      };
-      CurrentItemChanged += (sender, EventArgs) =>
-      {
-        DeserializeImage(CurrentItem.Bild);
-      };
-      EntitySpectator.SaveRequested += (sender, EventArgs) =>
-      {
-        CurrentItem.Bild = Convert.ToBase64String(SerializedImage);
-      };
-      DeserializeImage(CurrentItem.Bild);
+      __AttachEvents();
     }
 
     public string SpielerName
@@ -31,6 +21,16 @@ namespace SportLeagueOverview.ViewModels
       {
         CurrentItem.Name = value;
         OnPropertyChanged(nameof(SpielerName));
+      }
+    }
+
+    public ImageSource Bild
+    {
+      get => DeserializeImage(CurrentItem.Bild);
+      set
+      {
+        CurrentItem.Bild = SerializeImage(value);
+        OnPropertyChanged(nameof(CurrentItem.Bild));
       }
     }
 
@@ -81,6 +81,24 @@ namespace SportLeagueOverview.ViewModels
       {
         CurrentItem.Eintrittsdatum = value;
         OnPropertyChanged(nameof(CurrentItem.Eintrittsdatum));
+      }
+    }
+
+    private void __AttachEvents()
+    {
+      ImageSelected += (sender, e) =>
+      {
+        Bild = (ImageSource)sender;
+      };
+    }
+
+    public override void Execute_Delete(object sender)
+    {
+      if(!DatenbankHelfer.CheckTrainerIsUsed(CurrentItem.PersonId))
+        base.Execute_Delete(sender);
+      else
+      {
+        ThrowMessage("Trainer kann nicht gelöscht werden, da er in einer Mannschaft hinterlegt ist!");
       }
     }
 
