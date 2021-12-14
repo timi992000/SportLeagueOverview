@@ -8,9 +8,9 @@
     }
 
     public int AdressId { get; set; }
-    public string Straße { get; set; }
-    public string AdressZusatz { get; set; }
-    public int PLZ { get; set; }
-    public string Stadt { get; set; }
+    public string Street { get; set; }
+    public string AdressAddition { get; set; }
+    public int ZipCode { get; set; }
+    public string City { get; set; }
   }
 }

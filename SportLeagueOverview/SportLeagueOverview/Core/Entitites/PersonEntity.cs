@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SportLeagueOverview.Core.Attributes;
+using System;
 using System.ComponentModel;
 
 namespace SportLeagueOverview.Core.Entitites
@@ -11,29 +12,47 @@ namespace SportLeagueOverview.Core.Entitites
     }
 
     [DisplayName("Spieler Id")]
+    [ColumnName("PersonId")]
     public int PersonId { get; set; }
 
+
     [DisplayName("Name")]
-    public string Name { get; set; }
+    [ColumnName("Name")]
+    public string PlayerName { get; set; }
+
 
     [DisplayName("Mannschaft")]
-    public int AktuelleMannId { get; set; }
+    [ColumnName("AktuelleMannId")]
+    public int TeamId { get; set; }
+
 
     [DisplayName("Rückennummer")]
-    public int Rückennummer { get; set; }
+    [ColumnName("Rückennummer")]
+    public int BackNumber { get; set; }
+
 
     [DisplayName("Trainer?")]
-    public bool IsTrainer { get; set; }
+    [ColumnName("IsTrainer")]
+    public bool IsCoach { get; set; }
+
 
     [DisplayName("Geburtsdatum")]
-    public DateTime Geburtsdatum { get; set; }
+    [ColumnName("Geburtsdatum")]
+    public DateTime BirthDate { get; set; }
 
-    public string Bild { get; set; }
+
+    [ColumnName("Bild")]
+    public string ProfilePicture { get; set; }
+
 
     [DisplayName("Adress Id")]
+    [ColumnName("AdressId")]
     public int AdressId { get; set; }
 
+
     [DisplayName("Eintrittsdatum")]
-    public DateTime Eintrittsdatum { get; set; }
+    [ColumnName("Eintrittsdatum")]
+    public DateTime EntryDate { get; set; }
+
   }
 }

@@ -7,55 +7,55 @@ using System.Windows;
 
 namespace SportLeagueOverview
 {
-  public class MainViewModel : ViewModelBase<MannschaftEntity>
+  public class MainViewModel : ViewModelBase<TeamEntity>
   {
-    private MannschaftViewModel m_MannschaftViewModel;
-    private SpielerViewModel m_SpielerViewModel;
-    private SpieleViewModel m_SpieleViewModel;
-    private StatistikenViewModel m_StatistikenViewModel;
+    private TeamViewModel m_MannschaftViewModel;
+    private PlayerViewModel m_SpielerViewModel;
+    private MatchViewModel m_SpieleViewModel;
+    private StatisticsViewModel m_StatistikenViewModel;
 
     public MainViewModel()
     {
       ThemeManager.Current.ChangeTheme(Application.Current, "Light.Blue");
-      DatenbankHelfer.Initialize();
+      DBAccess.Initialize();
     }
 
-    public MannschaftViewModel MannschaftViewModel
+    public TeamViewModel MannschaftViewModel
     {
       get
       {
         if (m_MannschaftViewModel == null)
-          m_MannschaftViewModel = new MannschaftViewModel();
+          m_MannschaftViewModel = new TeamViewModel();
         return m_MannschaftViewModel;
       }
     }
 
-    public SpielerViewModel SpielerViewModel
+    public PlayerViewModel SpielerViewModel
     {
       get
       {
         if (m_SpielerViewModel == null)
-          m_SpielerViewModel = new SpielerViewModel();
+          m_SpielerViewModel = new PlayerViewModel();
         return m_SpielerViewModel;
       }
     }
 
-    public SpieleViewModel SpieleViewModel
+    public MatchViewModel SpieleViewModel
     {
       get
       {
         if (m_SpieleViewModel == null)
-          m_SpieleViewModel = new SpieleViewModel();
+          m_SpieleViewModel = new MatchViewModel();
         return m_SpieleViewModel;
       }
     }
 
-    public StatistikenViewModel StatistikenViewModel
+    public StatisticsViewModel StatistikenViewModel
     {
       get
       {
         if (m_StatistikenViewModel == null)
-          m_StatistikenViewModel = new StatistikenViewModel();
+          m_StatistikenViewModel = new StatisticsViewModel();
         return m_StatistikenViewModel;
       }
     }

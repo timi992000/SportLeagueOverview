@@ -11,7 +11,7 @@ namespace SportLeagueOverview.Views
     public StatistikenView()
     {
       InitializeComponent();
-      DataContext = new StatistikenViewModel();
+      DataContext = new StatisticsViewModel();
     }
   }
 }

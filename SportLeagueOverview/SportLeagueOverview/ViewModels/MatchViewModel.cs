@@ -3,9 +3,9 @@ using SportLeagueOverview.Core.Entitites;
 
 namespace SportLeagueOverview.ViewModels
 {
-  public class SpieleViewModel : ViewModelBase<SpielEntity>
+  public class MatchViewModel : ViewModelBase<MatchEntity>
   {
-    public SpieleViewModel()
+    public MatchViewModel()
     {
     }
   }

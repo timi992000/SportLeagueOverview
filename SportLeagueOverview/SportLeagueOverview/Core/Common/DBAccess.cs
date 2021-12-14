@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.Sqlite;
+using SportLeagueOverview.Core.Attributes;
 using SportLeagueOverview.Core.Extender;
 using System;
 using System.Collections.Generic;
@@ -10,12 +11,12 @@ using System.Windows;
 namespace SportLeagueOverview.Core.Common
 {
 
-  public static class DatenbankHelfer
+  public static class DBAccess
   {
     private static SqliteConnection m_Connection;
 
     #region [Ctor]
-    static DatenbankHelfer()
+    static DBAccess()
     {
       try
       {
@@ -43,6 +44,9 @@ namespace SportLeagueOverview.Core.Common
         Command.CommandText = $"SELECT * FROM {tmpEntity.GetType().GetProperty("TableName").GetValue(tmpEntity)}";
         var Reader = Command.ExecuteReader();
         var Properties = typeof(T).GetProperties();
+        var Columns = new Dictionary<string, ColumnNameAttribute>();
+        Properties.ToList().ForEach(x => Columns.Add(x.Name, (ColumnNameAttribute)Attribute.GetCustomAttribute(x, typeof(ColumnNameAttribute), true)));
+        Columns.Where(x => x.Value == null).Select(y => y.Key).ToList().ForEach(x => Columns.Remove(x));
         while (Reader.Read())
         {
           T Entity = Activator.CreateInstance<T>();
@@ -50,9 +54,10 @@ namespace SportLeagueOverview.Core.Common
           {
             var ColumnName = Reader.GetName(i);
             tmpColumnName = ColumnName;
-            if (Properties.Any(x => x.Name == ColumnName))
+            if (Columns.Any(x => x.Value.ColumnName == ColumnName))
             {
-              var PropertyInfo = Properties.First(x => x.Name == ColumnName);
+              var PropertyName = Columns.FirstOrDefault(x => x.Value.ColumnName.Equals(ColumnName)).Key;
+              var PropertyInfo = Properties.First(x => x.Name == PropertyName);
               var FieldValue = Reader.GetFieldValue<object>(i);
               if (FieldValue == DBNull.Value)
                 continue;
@@ -120,9 +125,11 @@ namespace SportLeagueOverview.Core.Common
           int i = 0;
           foreach (var Property in Properties)
           {
+
             i++;
+            var ColumnName = __GetColumnNameForProperty(Property);
             var FieldValue = Property.GetValue(Entity);
-            if (i > Properties.Length || Property.Name.Equals(PrimaryKeyColumn) || FieldValue.IsNullOrEmpty())
+            if (i > Properties.Length || ColumnName.Equals(PrimaryKeyColumn) || FieldValue.IsNullOrEmpty())
               continue;
             if (Property.PropertyType == typeof(int))
             {
@@ -136,7 +143,7 @@ namespace SportLeagueOverview.Core.Common
             }
             else
               Values += $"'{FieldValue}'";
-            Columns += Property.Name;
+            Columns += ColumnName;
             if (i < Properties.Length)
             {
               Columns += ",";
@@ -168,7 +175,10 @@ namespace SportLeagueOverview.Core.Common
       try
       {
         var PrimaryKeyColumn = Entity.GetPrimaryKeyColumn().ToString();
-        var PrimaryKeyValue = Entity.GetType().GetProperty(PrimaryKeyColumn).GetValue(Entity);
+        int PrimaryKeyValue = 0;
+
+        PrimaryKeyValue = __GetPrimaryKeyValue(Entity, PrimaryKeyColumn, PrimaryKeyValue);
+
         var TableName = Entity.GetType().GetProperty("TableName").GetValue(Entity);
         var Cmd = string.Empty;
         var PropertyCmds = new List<string>();
@@ -179,21 +189,22 @@ namespace SportLeagueOverview.Core.Common
         foreach (var Property in Properties)
         {
           i++;
+          var ColumnName = __GetColumnNameForProperty(Property);
           var FieldValue = Property.GetValue(Entity);
-          if (i > Properties.Length || Property.Name.Equals(PrimaryKeyColumn) || FieldValue.IsNullOrEmpty())
+          if (i > Properties.Length || ColumnName.Equals(PrimaryKeyColumn) || FieldValue.IsNullOrEmpty())
             continue;
           if (Property.PropertyType == typeof(int))
           {
             if (Convert.ToInt32(FieldValue) == 0)
               continue;
-            PropertyCmds.Add($"{Property.Name} = {FieldValue}");
+            PropertyCmds.Add($"{ColumnName} = {FieldValue}");
           }
           else if (Property.PropertyType == typeof(bool))
           {
-            PropertyCmds.Add($"{Property.Name} = {Convert.ToInt32(FieldValue)}");
+            PropertyCmds.Add($"{ColumnName} = {Convert.ToInt32(FieldValue)}");
           }
           else
-            PropertyCmds.Add($"{Property.Name} = '{FieldValue}'");
+            PropertyCmds.Add($"{ColumnName} = '{FieldValue}'");
         }
         Cmd = $"UPDATE {TableName} SET {string.Join(",", PropertyCmds)} WHERE {PrimaryKeyColumn} = {PrimaryKeyValue}";
         var Result = ExecuteNonQuery(Cmd);
@@ -203,6 +214,32 @@ namespace SportLeagueOverview.Core.Common
         __ThrowMessage(ex.ToString());
       }
     }
+
+    private static int __GetPrimaryKeyValue<T>(T Entity, string PrimaryKeyColumn, int PrimaryKeyValue)
+    {
+      foreach (var PropertyInfo in Entity.GetType().GetProperties())
+      {
+        var ColNameAttribute = (ColumnNameAttribute)Attribute.GetCustomAttributes(PropertyInfo, typeof(ColumnNameAttribute), true).FirstOrDefault();
+        if (ColNameAttribute == null)
+          continue;
+        if (ColNameAttribute.ColumnName.Equals(PrimaryKeyColumn))
+        {
+          PrimaryKeyValue = Convert.ToInt32(PropertyInfo.GetValue(Entity));
+          break;
+        }
+      }
+      return PrimaryKeyValue;
+    }
+
+    private static string __GetColumnNameForProperty(System.Reflection.PropertyInfo property)
+    {
+      var tmpColumnNameAttribute = Attribute.GetCustomAttributes(property, typeof(ColumnNameAttribute), true)[0];
+      string ColumnName = string.Empty;
+      if (tmpColumnNameAttribute != null && tmpColumnNameAttribute is ColumnNameAttribute ColNameAtr)
+        ColumnName = ColNameAtr.ColumnName;
+      return ColumnName;
+    }
+
     private static string __RemoveEndingSeparator(string CommandText, bool FirstOnly = false)
     {
       CommandText = CommandText.Trim();
@@ -222,8 +259,11 @@ namespace SportLeagueOverview.Core.Common
       try
       {
         var TableName = Entity.GetType().GetProperty("TableName").GetValue(Entity);
-        var PrimaryKeyColumn = Entity.GetType().GetProperty("PrimaryKeyColumn").GetValue(Entity);
-        var PrimaryKeyValue = Entity.GetType().GetProperty(PrimaryKeyColumn.ToString()).GetValue(Entity);
+        var PrimaryKeyColumn = Entity.GetType().GetProperty("PrimaryKeyColumn").GetValue(Entity).ToString();
+        int PrimaryKeyValue = 0;
+
+        PrimaryKeyValue = __GetPrimaryKeyValue(Entity, PrimaryKeyColumn, PrimaryKeyValue);
+
         if (PrimaryKeyColumn.IsNullOrEmpty() || PrimaryKeyValue.IsNullOrEmpty())
           return false;
         __OpenIfNeeded();

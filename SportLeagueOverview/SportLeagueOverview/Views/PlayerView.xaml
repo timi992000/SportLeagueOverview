@@ -8,14 +8,21 @@
                        xmlns:controls="clr-namespace:SportLeagueOverview.Core.Controls" xmlns:b="http://schemas.microsoft.com/xaml/behaviors" xmlns:detailviews="clr-namespace:SportLeagueOverview.Views.DetailViews"
                        mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
+    <core:UserControlBase.LayoutTransform>
+        <ScaleTransform CenterX="0" ScaleX="{Binding ScalingValue}" ScaleY="{Binding ScalingValue}"/>
+    </core:UserControlBase.LayoutTransform>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition Width="5" />
             <ColumnDefinition />
         </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
 
         <ScrollViewer Grid.Column="0"
+                      Grid.RowSpan="2"
                       HorizontalScrollBarVisibility="Auto"
                       VerticalScrollBarVisibility="Auto">
             <DataGrid ItemsSource="{Binding CurrentItems}"
@@ -23,9 +30,9 @@
                       AutoGeneratingColumn="DataGrid_AutoGeneratingColumn"/>
         </ScrollViewer>
 
-        <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch" />
+        <GridSplitter Grid.Column="1" Grid.RowSpan="2" Width="5" HorizontalAlignment="Stretch" />
 
-        <detailviews:SpielerDetailView  Grid.Column="2" />
-
+        <detailviews:SpielerDetailView  Grid.Column="2" Grid.Row="0"/>
+        
     </Grid>
 </core:UserControlBase>
