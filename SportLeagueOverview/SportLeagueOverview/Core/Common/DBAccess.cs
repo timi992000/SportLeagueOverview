@@ -175,7 +175,10 @@ namespace SportLeagueOverview.Core.Common
       try
       {
         var PrimaryKeyColumn = Entity.GetPrimaryKeyColumn().ToString();
-        var PrimaryKeyValue = Entity.GetType().GetProperty(PrimaryKeyColumn).GetValue(Entity);
+        int PrimaryKeyValue = 0;
+
+        PrimaryKeyValue = __GetPrimaryKeyValue(Entity, PrimaryKeyColumn, PrimaryKeyValue);
+
         var TableName = Entity.GetType().GetProperty("TableName").GetValue(Entity);
         var Cmd = string.Empty;
         var PropertyCmds = new List<string>();
@@ -212,6 +215,22 @@ namespace SportLeagueOverview.Core.Common
       }
     }
 
+    private static int __GetPrimaryKeyValue<T>(T Entity, string PrimaryKeyColumn, int PrimaryKeyValue)
+    {
+      foreach (var PropertyInfo in Entity.GetType().GetProperties())
+      {
+        var ColNameAttribute = (ColumnNameAttribute)Attribute.GetCustomAttributes(PropertyInfo, typeof(ColumnNameAttribute), true).FirstOrDefault();
+        if (ColNameAttribute == null)
+          continue;
+        if (ColNameAttribute.ColumnName.Equals(PrimaryKeyColumn))
+        {
+          PrimaryKeyValue = Convert.ToInt32(PropertyInfo.GetValue(Entity));
+          break;
+        }
+      }
+      return PrimaryKeyValue;
+    }
+
     private static string __GetColumnNameForProperty(System.Reflection.PropertyInfo property)
     {
       var tmpColumnNameAttribute = Attribute.GetCustomAttributes(property, typeof(ColumnNameAttribute), true)[0];
@@ -240,8 +259,11 @@ namespace SportLeagueOverview.Core.Common
       try
       {
         var TableName = Entity.GetType().GetProperty("TableName").GetValue(Entity);
-        var PrimaryKeyColumn = Entity.GetType().GetProperty("PrimaryKeyColumn").GetValue(Entity);
-        var PrimaryKeyValue = Entity.GetType().GetProperty(PrimaryKeyColumn.ToString()).GetValue(Entity);
+        var PrimaryKeyColumn = Entity.GetType().GetProperty("PrimaryKeyColumn").GetValue(Entity).ToString();
+        int PrimaryKeyValue = 0;
+
+        PrimaryKeyValue = __GetPrimaryKeyValue(Entity, PrimaryKeyColumn, PrimaryKeyValue);
+
         if (PrimaryKeyColumn.IsNullOrEmpty() || PrimaryKeyValue.IsNullOrEmpty())
           return false;
         __OpenIfNeeded();
