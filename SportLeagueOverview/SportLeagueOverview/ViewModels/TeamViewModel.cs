@@ -18,38 +18,38 @@ namespace SportLeagueOverview.ViewModels
       __AttachEvents();
     }
 
-    public string Name
+    public string TeamName
     {
-      get => CurrentItem.Name;
+      get => CurrentItem.TeamName;
       set
       {
-        CurrentItem.Name = value;
-        OnPropertyChanged(nameof(CurrentItem.Name));
+        CurrentItem.TeamName = value;
+        OnPropertyChanged(nameof(CurrentItem.TeamName));
       }
     }
 
-    public ImageSource Wappen
+    public ImageSource CoatOfArms
     {
-      get => DeserializeImage(CurrentItem.Wappen);
+      get => DeserializeImage(CurrentItem.CoatOfArms);
       set
       {
-        CurrentItem.Wappen = SerializeImage(value);
-        OnPropertyChanged(nameof(CurrentItem.Wappen));
+        CurrentItem.CoatOfArms = SerializeImage(value);
+        OnPropertyChanged(nameof(CurrentItem.CoatOfArms));
       }
     }
 
-    public int GründungsJahr
+    public int FoundingYear
     {
       get
       {
-        if (CurrentItem.Gruendungsjahr == 0)
-          CurrentItem.Gruendungsjahr = DateTime.Now.Year;
-        return CurrentItem.Gruendungsjahr;
+        if (CurrentItem.FoundingYear == 0)
+          CurrentItem.FoundingYear = DateTime.Now.Year;
+        return CurrentItem.FoundingYear;
       }
       set
       {
-        CurrentItem.Gruendungsjahr = value;
-        OnPropertyChanged(nameof(CurrentItem.Gruendungsjahr));
+        CurrentItem.FoundingYear = value;
+        OnPropertyChanged(nameof(CurrentItem.FoundingYear));
       }
     }
 
@@ -62,16 +62,16 @@ namespace SportLeagueOverview.ViewModels
     }
 
 
-    public PersonEntity Trainer
+    public PersonEntity Coach
     {
-      get => Trainers.FirstOrDefault(x => x.PersonId == CurrentItem.TrainerId);
+      get => Trainers.FirstOrDefault(x => x.PersonId == CurrentItem.CoachId);
       set
       {
         if (value == null)
           return;
-        CurrentItem.TrainerId = value.PersonId;
-        OnPropertyChanged(nameof(Trainer));
-        OnPropertyChanged(nameof(CurrentItem.TrainerId));
+        CurrentItem.CoachId = value.PersonId;
+        OnPropertyChanged(nameof(Coach));
+        OnPropertyChanged(nameof(CurrentItem.CoachId));
       }
     }
 
@@ -79,7 +79,7 @@ namespace SportLeagueOverview.ViewModels
     {
       ImageSelected += (sender, e) =>
       {
-        Wappen = (ImageSource)sender;
+        CoatOfArms = (ImageSource)sender;
       };
       EntitySpectator.SaveCompleted += (sender, EventArgs) =>
       {
@@ -93,9 +93,9 @@ namespace SportLeagueOverview.ViewModels
 
     private void __RefreshTrainer()
     {
-      m_Trainers = DBAccess.ReadEntity<PersonEntity>().Where(x => x.IsTrainer).ToList();
+      m_Trainers = DBAccess.ReadEntity<PersonEntity>().Where(x => x.IsCoach).ToList();
       OnPropertyChanged(nameof(Trainers));
-      OnPropertyChanged(nameof(Trainer));
+      OnPropertyChanged(nameof(Coach));
     }
   }
 }

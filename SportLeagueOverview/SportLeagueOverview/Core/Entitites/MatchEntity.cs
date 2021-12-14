@@ -9,15 +9,19 @@ namespace SportLeagueOverview.Core.Entitites
     {
 
     }
-    public int SpielId { get; set; }
-    public MatchState Status { get; set; }
-    public DateTime Anpfiff { get; set; }
-    public TeamEntity HeimMannschaft { get; set; }
-    public TeamEntity AuswärtsMannschaft { get; set; }
-    public AdressEntity AustragungsOrt { get; set; }
+    public int GameId { get; set; }
+    public MatchState State { get; set; }
+    public DateTime Kickoff { get; set; }
+    public TeamEntity HomeTeam { get; set; }
+    public TeamEntity AwaTeam { get; set; }
+    public AdressEntity Venue { get; set; }
 
-    public void ÄndereStatus()
+    public void ChangeStatus(MatchState NewState)
     {
+      if(State != NewState)
+      {
+        State = NewState;
+      }
     }
   }
 }

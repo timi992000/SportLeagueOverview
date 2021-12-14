@@ -30,7 +30,7 @@
                Grid.Row="0"
                Grid.Column="0"
                Margin="0 0 0 5"/>
-        <TextBox Text="{Binding SpielerName, Mode=TwoWay}"
+        <TextBox Text="{Binding PlayerName, Mode=TwoWay}"
                  Grid.Row="0"
                  Grid.Column="1"
                  Margin="0 0 0 5"/>
@@ -39,7 +39,7 @@
                Grid.Row="1"
                Grid.Column="0"
                Margin="0 0 0 5"/>
-        <controls:NumericBox Text="{Binding Rückennummer, Mode=TwoWay}"
+        <controls:NumericBox Text="{Binding BackNumber, Mode=TwoWay}"
                  Grid.Row="1"
                  Grid.Column="1"
                  MaxLength="2"
@@ -51,7 +51,7 @@
                Margin="0 0 0 5"/>
         <DatePicker Grid.Row="2"
                     Grid.Column="1"
-                    SelectedDate="{Binding Geburtsdatum, Mode=TwoWay}"/>
+                    SelectedDate="{Binding BirthDate, Mode=TwoWay}"/>
 
         <Label Content="Eintrittsdatum"
                Grid.Row="3"
@@ -59,7 +59,7 @@
                Margin="0 0 0 5"/>
         <DatePicker Grid.Row="3"
                     Grid.Column="1"
-                    SelectedDate="{Binding Eintrittsdatum, Mode=TwoWay}"/>
+                    SelectedDate="{Binding EntryDate, Mode=TwoWay}"/>
 
         <Label Content="Trainer?"
                Grid.Row="4"
@@ -67,7 +67,7 @@
                Margin="0 0 0 5"/>
         <CheckBox Grid.Row="4"
                     Grid.Column="1"
-                    IsChecked="{Binding IsTrainer, Mode=TwoWay}"/>
+                    IsChecked="{Binding IsCoach, Mode=TwoWay}"/>
 
         <StackPanel Grid.Row="0"
                    Grid.RowSpan="100"
@@ -78,7 +78,7 @@
                     <b:InvokeCommandAction Command="{Binding SelectImage}"/>
                 </b:EventTrigger>
             </b:Interaction.Triggers>
-            <Image Source="{Binding Bild, Mode=TwoWay}"/>
+            <Image Source="{Binding ProfilePicture, Mode=TwoWay}"/>
         </StackPanel >
     </Grid>
 </core:UserControlBase>

@@ -14,73 +14,73 @@ namespace SportLeagueOverview.ViewModels
       __AttachEvents();
     }
 
-    public string SpielerName
+    public string PlayerName
     {
-      get => CurrentItem.Name;
+      get => CurrentItem.PlayerName;
       set
       {
-        CurrentItem.Name = value;
-        OnPropertyChanged(nameof(SpielerName));
+        CurrentItem.PlayerName = value;
+        OnPropertyChanged(nameof(PlayerName));
       }
     }
 
-    public ImageSource Bild
+    public ImageSource ProfilePicture
     {
-      get => DeserializeImage(CurrentItem.Bild);
+      get => DeserializeImage(CurrentItem.ProfilePicture);
       set
       {
-        CurrentItem.Bild = SerializeImage(value);
-        OnPropertyChanged(nameof(CurrentItem.Bild));
+        CurrentItem.ProfilePicture = SerializeImage(value);
+        OnPropertyChanged(nameof(CurrentItem.ProfilePicture));
       }
     }
 
-    public int Rückennummer
+    public int BackNumber
     {
-      get => CurrentItem.Rückennummer;
+      get => CurrentItem.BackNumber;
       set
       {
-        CurrentItem.Rückennummer = value;
-        OnPropertyChanged(nameof(CurrentItem.Rückennummer));
+        CurrentItem.BackNumber = value;
+        OnPropertyChanged(nameof(CurrentItem.BackNumber));
       }
     }
 
-    public DateTime Geburtsdatum
+    public DateTime BirthDate
     {
       get
       {
-        if (CurrentItem.Geburtsdatum == default(DateTime))
-          CurrentItem.Geburtsdatum = DateTime.Now;
-        return CurrentItem.Geburtsdatum;
+        if (CurrentItem.BirthDate == default(DateTime))
+          CurrentItem.BirthDate = DateTime.Now;
+        return CurrentItem.BirthDate;
       }
       set
       {
-        CurrentItem.Geburtsdatum = value;
-        OnPropertyChanged(nameof(CurrentItem.Geburtsdatum));
+        CurrentItem.BirthDate = value;
+        OnPropertyChanged(nameof(CurrentItem.BirthDate));
       }
     }
 
-    public bool IsTrainer
+    public bool IsCoach
     {
-      get => CurrentItem.IsTrainer;
+      get => CurrentItem.IsCoach;
       set
       {
-        CurrentItem.IsTrainer = value;
-        OnPropertyChanged(nameof(CurrentItem.IsTrainer));
+        CurrentItem.IsCoach = value;
+        OnPropertyChanged(nameof(CurrentItem.IsCoach));
       }
     }
 
-    public DateTime Eintrittsdatum
+    public DateTime EntryDate
     {
       get
       {
-        if (CurrentItem.Eintrittsdatum == default(DateTime))
-          CurrentItem.Eintrittsdatum = DateTime.Now;
-        return CurrentItem.Eintrittsdatum;
+        if (CurrentItem.EntryDate == default(DateTime))
+          CurrentItem.EntryDate = DateTime.Now;
+        return CurrentItem.EntryDate;
       }
       set
       {
-        CurrentItem.Eintrittsdatum = value;
-        OnPropertyChanged(nameof(CurrentItem.Eintrittsdatum));
+        CurrentItem.EntryDate = value;
+        OnPropertyChanged(nameof(CurrentItem.EntryDate));
       }
     }
 
@@ -88,7 +88,7 @@ namespace SportLeagueOverview.ViewModels
     {
       ImageSelected += (sender, e) =>
       {
-        Bild = (ImageSource)sender;
+        ProfilePicture = (ImageSource)sender;
       };
     }
 

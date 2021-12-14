@@ -18,31 +18,34 @@ namespace SportLeagueOverview.Core.Entitites
 
     [DisplayName("Name")]
     [ColumnName("Name")]
-    public string Name { get; set; }
+    public string PlayerName { get; set; }
 
 
     [DisplayName("Mannschaft")]
     [ColumnName("AktuelleMannId")]
-    public int AktuelleMannId { get; set; }
+    public int TeamId { get; set; }
 
 
     [DisplayName("Rückennummer")]
     [ColumnName("Rückennummer")]
-    public int Rückennummer { get; set; }
+    public int BackNumber { get; set; }
 
 
     [DisplayName("Trainer?")]
     [ColumnName("IsTrainer")]
-    public bool IsTrainer { get; set; }
+    public bool IsCoach { 
+      get;
+      set; 
+    }
 
 
     [DisplayName("Geburtsdatum")]
     [ColumnName("Geburtsdatum")]
-    public DateTime Geburtsdatum { get; set; }
+    public DateTime BirthDate { get; set; }
 
 
     [ColumnName("Bild")]
-    public string Bild { get; set; }
+    public string ProfilePicture { get; set; }
 
 
     [DisplayName("Adress Id")]
@@ -52,7 +55,7 @@ namespace SportLeagueOverview.Core.Entitites
 
     [DisplayName("Eintrittsdatum")]
     [ColumnName("Eintrittsdatum")]
-    public DateTime Eintrittsdatum { get; set; }
+    public DateTime EntryDate { get; set; }
 
   }
 }

@@ -32,7 +32,7 @@
                    Grid.Column="0"
                    VerticalAlignment="Top"
                    Margin="0 0 0 5"/>
-        <TextBox Text="{Binding Name, Mode=TwoWay}"
+        <TextBox Text="{Binding TeamName, Mode=TwoWay}"
                      Grid.Row="0"
                      Grid.Column="1"
                      VerticalAlignment="Top"
@@ -42,7 +42,7 @@
                    Grid.Row="1"
                    Grid.Column="0"
                    Margin="0 0 0 5"/>
-        <controls:NumericBox Text="{Binding GründungsJahr, Mode=TwoWay}" Grid.Row="1"
+        <controls:NumericBox Text="{Binding FoundingYear, Mode=TwoWay}" Grid.Row="1"
                                  Grid.Column="1"
                                  MaxLength="4"
                                  MaxLines="1"
@@ -53,8 +53,8 @@
                    Grid.Column="0"
                    Margin="0 0 0 5"/>
         <ComboBox ItemsSource="{Binding Trainers}"
-                      SelectedItem="{Binding Trainer}"
-                      DisplayMemberPath="Name"
+                      SelectedItem="{Binding Coach}"
+                      DisplayMemberPath="PlayerName"
                       Grid.Row="2"
                      Grid.Column="1"
                      Margin="0 0 0 5"/>
@@ -68,7 +68,7 @@
                     <b:InvokeCommandAction Command="{Binding SelectImage}"/>
                 </b:EventTrigger>
             </b:Interaction.Triggers>
-            <Image Source="{Binding Wappen, Mode=TwoWay}" Width="Auto" Height="Auto">
+            <Image Source="{Binding CoatOfArms, Mode=TwoWay}" Width="Auto" Height="Auto">
                 <!--<Image.LayoutTransform>
                     <ScaleTransform CenterX="0" ScaleX="35" ScaleY="35" />
                 </Image.LayoutTransform>-->
