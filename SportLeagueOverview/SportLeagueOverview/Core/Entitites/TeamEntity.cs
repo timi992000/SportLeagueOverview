@@ -4,9 +4,9 @@ using System.ComponentModel;
 
 namespace SportLeagueOverview.Core.Entitites
 {
-  public class MannschaftEntity : EntityBase
+  public class TeamEntity : EntityBase
   {
-    public MannschaftEntity()
+    public TeamEntity()
       : base("Mannschaft", "MannschaftId")
     {
     }

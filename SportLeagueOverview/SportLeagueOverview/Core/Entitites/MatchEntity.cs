@@ -2,18 +2,18 @@
 
 namespace SportLeagueOverview.Core.Entitites
 {
-  public class SpielEntity : EntityBase
+  public class MatchEntity : EntityBase
   {
-    public SpielEntity()
+    public MatchEntity()
   : base("Spiel", "SpielId")
     {
 
     }
     public int SpielId { get; set; }
-    public SpielStatus Status { get; set; }
+    public MatchState Status { get; set; }
     public DateTime Anpfiff { get; set; }
-    public MannschaftEntity HeimMannschaft { get; set; }
-    public MannschaftEntity AuswärtsMannschaft { get; set; }
+    public TeamEntity HeimMannschaft { get; set; }
+    public TeamEntity AuswärtsMannschaft { get; set; }
     public AdressEntity AustragungsOrt { get; set; }
 
     public void ÄndereStatus()

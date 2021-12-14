@@ -14,7 +14,7 @@ namespace SportLeagueOverview.Views
     public SpieleView()
     {
       InitializeComponent();
-      DataContext = new SpieleViewModel();
+      DataContext = new MatchViewModel();
     }
 
     private void DataGrid_AutoGeneratingColumn(object sender, System.Windows.Controls.DataGridAutoGeneratingColumnEventArgs e)

@@ -1,8 +1,8 @@
 ﻿namespace SportLeagueOverview.Core.Entitites
 {
-  public class EreignisEntity : EntityBase
+  public class EventEntity : EntityBase
   {
-    public EreignisEntity() :
+    public EventEntity() :
       base("Ereignis", "EreignisId")
     {
     }

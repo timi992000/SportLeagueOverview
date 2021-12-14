@@ -1,5 +1,4 @@
 ﻿using SportLeagueOverview.Core;
-using SportLeagueOverview.Core.Entitites;
 using SportLeagueOverview.ViewModels;
 using System;
 using System.ComponentModel;
@@ -8,14 +7,14 @@ using System.Windows.Controls;
 namespace SportLeagueOverview.Views
 {
   /// <summary>
-  /// Interaction logic for MannschaftView.xaml
+  /// Interaction logic for SpielerView.xaml
   /// </summary>
-  public partial class MannschaftView : UserControlBase
+  public partial class SpielerView : UserControlBase
   {
-    public MannschaftView()
+    public SpielerView()
     {
       InitializeComponent();
-      DataContext = new MannschaftViewModel();
+      DataContext = new PlayerViewModel();
     }
 
     private void DataGrid_AutoGeneratingColumn(object sender, System.Windows.Controls.DataGridAutoGeneratingColumnEventArgs e)
@@ -25,8 +24,8 @@ namespace SportLeagueOverview.Views
         (e.Column as DataGridTextColumn).Binding.StringFormat = "dd.MM.yyyy";
       }
       e.Column.Header = ((PropertyDescriptor)e.PropertyDescriptor).DisplayName;
-      if (e.Column.Header.Equals("Wappen") ||
-        e.Column.Header.Equals("Tabelle")||
+      if (e.Column.Header.Equals("Bild") ||
+        e.Column.Header.Equals("Tabelle") ||
         e.Column.Header.Equals("PrimaryKeyColumn") ||
           e.Column.Header.Equals("IsNew"))
       {

@@ -189,7 +189,7 @@ namespace SportLeagueOverview.Core
     {
       HasChanges = false;
       EntitySpectator.InvokeSaveRequested(this, new EventArgs());
-      DatenbankHelfer.SaveEntity(CurrentItem);
+      DBAccess.SaveEntity(CurrentItem);
       CurrentItem = Activator.CreateInstance<T>();
       EntitySpectator.InvokeSaveCompleted(this, new EventArgs());
       __DoReload();
@@ -197,7 +197,7 @@ namespace SportLeagueOverview.Core
 
     public virtual void Execute_Delete(object sender)
     {
-      var Result = DatenbankHelfer.DeleteEntity(CurrentItem);
+      var Result = DBAccess.DeleteEntity(CurrentItem);
       if (Result)
         __DoReload();
       EntitySpectator.InvokeDeleteCompleted(this, new EventArgs());
@@ -231,11 +231,11 @@ namespace SportLeagueOverview.Core
       {
 
       }
-      else if (Type == typeof(EreignisEntity))
+      else if (Type == typeof(EventEntity))
       {
 
       }
-      else if (Type == typeof(MannschaftEntity))
+      else if (Type == typeof(TeamEntity))
       {
         m_NewDialog.Content = new MannschaftDetailView { DataContext = this };
       }
@@ -243,7 +243,7 @@ namespace SportLeagueOverview.Core
       {
         m_NewDialog.Content = new SpielerDetailView { DataContext = this };
       }
-      else if (Type == typeof(SpielEntity))
+      else if (Type == typeof(MatchEntity))
       {
         m_NewDialog.Content = new SpieleDetailView { DataContext = this };
       }
@@ -264,7 +264,7 @@ namespace SportLeagueOverview.Core
     {
       if (HasChanges)
         return;
-      CurrentItems = DatenbankHelfer.ReadEntity<T>();
+      CurrentItems = DBAccess.ReadEntity<T>();
       if (CurrentItems != null)
         CurrentItem = CurrentItems.FirstOrDefault();
       OnPropertyChanged(nameof(CurrentItems));

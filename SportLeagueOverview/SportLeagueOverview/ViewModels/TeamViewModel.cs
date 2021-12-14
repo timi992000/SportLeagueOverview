@@ -8,11 +8,11 @@ using System.Windows.Media;
 
 namespace SportLeagueOverview.ViewModels
 {
-  public class MannschaftViewModel : ViewModelBase<MannschaftEntity>
+  public class TeamViewModel : ViewModelBase<TeamEntity>
   {
     private List<PersonEntity> m_Trainers;
 
-    public MannschaftViewModel()
+    public TeamViewModel()
     {
       __RefreshTrainer();
       __AttachEvents();
@@ -93,7 +93,7 @@ namespace SportLeagueOverview.ViewModels
 
     private void __RefreshTrainer()
     {
-      m_Trainers = DatenbankHelfer.ReadEntity<PersonEntity>().Where(x => x.IsTrainer).ToList();
+      m_Trainers = DBAccess.ReadEntity<PersonEntity>().Where(x => x.IsTrainer).ToList();
       OnPropertyChanged(nameof(Trainers));
       OnPropertyChanged(nameof(Trainer));
     }

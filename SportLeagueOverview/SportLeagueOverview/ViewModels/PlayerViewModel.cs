@@ -6,10 +6,10 @@ using System.Windows.Media;
 
 namespace SportLeagueOverview.ViewModels
 {
-  public class SpielerViewModel : ViewModelBase<PersonEntity>
+  public class PlayerViewModel : ViewModelBase<PersonEntity>
   {
 
-    public SpielerViewModel()
+    public PlayerViewModel()
     {
       __AttachEvents();
     }
@@ -94,7 +94,7 @@ namespace SportLeagueOverview.ViewModels
 
     public override void Execute_Delete(object sender)
     {
-      if(!DatenbankHelfer.CheckTrainerIsUsed(CurrentItem.PersonId))
+      if(!DBAccess.CheckTrainerIsUsed(CurrentItem.PersonId))
         base.Execute_Delete(sender);
       else
       {

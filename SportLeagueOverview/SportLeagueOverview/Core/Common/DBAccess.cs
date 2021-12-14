@@ -11,12 +11,12 @@ using System.Windows;
 namespace SportLeagueOverview.Core.Common
 {
 
-  public static class DatenbankHelfer
+  public static class DBAccess
   {
     private static SqliteConnection m_Connection;
 
     #region [Ctor]
-    static DatenbankHelfer()
+    static DBAccess()
     {
       try
       {

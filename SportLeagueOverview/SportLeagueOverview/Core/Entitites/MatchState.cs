@@ -6,10 +6,10 @@ using System.Threading.Tasks;
 
 namespace SportLeagueOverview.Core.Entitites
 {
-    public enum SpielStatus
+    public enum MatchState
     {
-        Offen,
-        Laufen,
-        Abgeschlossen
+        Open,
+        Pending,
+        Done
     }
 }
