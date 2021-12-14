@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.Sqlite;
+using SportLeagueOverview.Core.Attributes;
 using SportLeagueOverview.Core.Extender;
 using System;
 using System.Collections.Generic;
@@ -120,9 +121,11 @@ namespace SportLeagueOverview.Core.Common
           int i = 0;
           foreach (var Property in Properties)
           {
+
             i++;
+            var ColumnName = __GetColumnNameForProperty(Property);
             var FieldValue = Property.GetValue(Entity);
-            if (i > Properties.Length || Property.Name.Equals(PrimaryKeyColumn) || FieldValue.IsNullOrEmpty())
+            if (i > Properties.Length || ColumnName.Equals(PrimaryKeyColumn) || FieldValue.IsNullOrEmpty())
               continue;
             if (Property.PropertyType == typeof(int))
             {
@@ -136,7 +139,7 @@ namespace SportLeagueOverview.Core.Common
             }
             else
               Values += $"'{FieldValue}'";
-            Columns += Property.Name;
+            Columns += ColumnName;
             if (i < Properties.Length)
             {
               Columns += ",";
@@ -179,21 +182,22 @@ namespace SportLeagueOverview.Core.Common
         foreach (var Property in Properties)
         {
           i++;
+          var ColumnName = __GetColumnNameForProperty(Property);
           var FieldValue = Property.GetValue(Entity);
-          if (i > Properties.Length || Property.Name.Equals(PrimaryKeyColumn) || FieldValue.IsNullOrEmpty())
+          if (i > Properties.Length || ColumnName.Equals(PrimaryKeyColumn) || FieldValue.IsNullOrEmpty())
             continue;
           if (Property.PropertyType == typeof(int))
           {
             if (Convert.ToInt32(FieldValue) == 0)
               continue;
-            PropertyCmds.Add($"{Property.Name} = {FieldValue}");
+            PropertyCmds.Add($"{ColumnName} = {FieldValue}");
           }
           else if (Property.PropertyType == typeof(bool))
           {
-            PropertyCmds.Add($"{Property.Name} = {Convert.ToInt32(FieldValue)}");
+            PropertyCmds.Add($"{ColumnName} = {Convert.ToInt32(FieldValue)}");
           }
           else
-            PropertyCmds.Add($"{Property.Name} = '{FieldValue}'");
+            PropertyCmds.Add($"{ColumnName} = '{FieldValue}'");
         }
         Cmd = $"UPDATE {TableName} SET {string.Join(",", PropertyCmds)} WHERE {PrimaryKeyColumn} = {PrimaryKeyValue}";
         var Result = ExecuteNonQuery(Cmd);
@@ -203,6 +207,16 @@ namespace SportLeagueOverview.Core.Common
         __ThrowMessage(ex.ToString());
       }
     }
+
+    private static string __GetColumnNameForProperty(System.Reflection.PropertyInfo property)
+    {
+      var tmpColumnNameAttribute = Attribute.GetCustomAttributes(property, typeof(ColumnNameAttribute), true)[0];
+      string ColumnName = string.Empty;
+      if (tmpColumnNameAttribute != null && tmpColumnNameAttribute is ColumnNameAttribute ColNameAtr)
+        ColumnName = ColNameAtr.ColumnName;
+      return ColumnName;
+    }
+
     private static string __RemoveEndingSeparator(string CommandText, bool FirstOnly = false)
     {
       CommandText = CommandText.Trim();
