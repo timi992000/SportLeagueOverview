@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 
-namespace SportLeagueOverview.Views
+namespace SportLeagueOverview.Views.CoreViews
 {
   /// <summary>
   /// Interaction logic for DetailViewBottomContent.xaml

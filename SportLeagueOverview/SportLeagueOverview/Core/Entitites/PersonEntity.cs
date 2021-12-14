@@ -33,10 +33,7 @@ namespace SportLeagueOverview.Core.Entitites
 
     [DisplayName("Trainer?")]
     [ColumnName("IsTrainer")]
-    public bool IsCoach { 
-      get;
-      set; 
-    }
+    public bool IsCoach { get; set; }
 
 
     [DisplayName("Geburtsdatum")]

@@ -1,78 +1,84 @@
 ﻿<core:UserControlBase  xmlns:core="clr-namespace:SportLeagueOverview.Core" x:Class="SportLeagueOverview.Views.DetailViews.MannschaftDetailView"
-             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
-             xmlns:local="clr-namespace:SportLeagueOverview.Views.DetailViews" xmlns:controls="clr-namespace:SportLeagueOverview.Core.Controls" xmlns:b="http://schemas.microsoft.com/xaml/behaviors"
+                       xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                       xmlns:controls="clr-namespace:SportLeagueOverview.Core.Controls" 
+                       xmlns:b="http://schemas.microsoft.com/xaml/behaviors" 
+                       xmlns:CoreViews="clr-namespace:SportLeagueOverview.Views.CoreViews"
                        mc:Ignorable="d" 
              d:DesignHeight="450" d:DesignWidth="800">
-    <Grid Margin="10 10" 
-              x:Name="DetailView"
-              IsEnabled="{Binding HasItems}">
+    <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition MaxHeight="35"/>
-            <RowDefinition MaxHeight="35"/>
-            <RowDefinition MaxHeight="35"/>
-            <RowDefinition MaxHeight="35"/>
-            <RowDefinition MaxHeight="35"/>
-            <RowDefinition MaxHeight="35"/>
-            <RowDefinition MaxHeight="35"/>
-            <RowDefinition MaxHeight="35"/>
+            <RowDefinition Height="9*"/>
+            <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-            <ColumnDefinition/>
-        </Grid.ColumnDefinitions>
+        <Grid Margin="10 10"
+              x:Name="DetailView"
+              IsEnabled="{Binding HasItems}"
+              Grid.Row="0">
+            <Grid.RowDefinitions>
+                <RowDefinition MaxHeight="35"/>
+                <RowDefinition MaxHeight="35"/>
+                <RowDefinition MaxHeight="35"/>
+                <RowDefinition MaxHeight="35"/>
+                <RowDefinition MaxHeight="35"/>
+                <RowDefinition MaxHeight="35"/>
+                <RowDefinition MaxHeight="35"/>
+                <RowDefinition MaxHeight="35"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
 
-        <Label Content="Name"
+            <Label Content="Name"
                    Grid.Row="0"
                    Grid.Column="0"
                    VerticalAlignment="Top"
                    Margin="0 0 0 5"/>
-        <TextBox Text="{Binding TeamName, Mode=TwoWay}"
+            <TextBox Text="{Binding TeamName, Mode=TwoWay}"
                      Grid.Row="0"
                      Grid.Column="1"
                      VerticalAlignment="Top"
                      Margin="0 0 0 5"/>
 
-        <Label Content="Gründungsjahr"
+            <Label Content="Gründungsjahr"
                    Grid.Row="1"
                    Grid.Column="0"
                    Margin="0 0 0 5"/>
-        <controls:NumericBox Text="{Binding FoundingYear, Mode=TwoWay}" Grid.Row="1"
+            <controls:NumericBox Text="{Binding FoundingYear, Mode=TwoWay}" Grid.Row="1"
                                  Grid.Column="1"
                                  MaxLength="4"
                                  MaxLines="1"
                                  Margin="0 0 0 5"
                                  BorderBrush="{Binding HasChangesBrush}"/>
-        <Label Content="Trainer"
+            <Label Content="Trainer"
                    Grid.Row="2"
                    Grid.Column="0"
                    Margin="0 0 0 5"/>
-        <ComboBox ItemsSource="{Binding Trainers}"
+            <ComboBox ItemsSource="{Binding Trainers}"
                       SelectedItem="{Binding Coach}"
                       DisplayMemberPath="PlayerName"
                       Grid.Row="2"
                      Grid.Column="1"
                      Margin="0 0 0 5"/>
 
-        <StackPanel Grid.Row="0"
+            <StackPanel Grid.Row="0"
                        Grid.RowSpan="100"
                        Grid.Column="3">
 
-            <b:Interaction.Triggers>
-                <b:EventTrigger EventName="MouseDown">
-                    <b:InvokeCommandAction Command="{Binding SelectImage}"/>
-                </b:EventTrigger>
-            </b:Interaction.Triggers>
-            <Image Source="{Binding CoatOfArms, Mode=TwoWay}" Width="Auto" Height="Auto">
-                <!--<Image.LayoutTransform>
-                    <ScaleTransform CenterX="0" ScaleX="35" ScaleY="35" />
-                </Image.LayoutTransform>-->
-            </Image>
-        </StackPanel >
+                <b:Interaction.Triggers>
+                    <b:EventTrigger EventName="MouseDown">
+                        <b:InvokeCommandAction Command="{Binding SelectImage}"/>
+                    </b:EventTrigger>
+                </b:Interaction.Triggers>
+                <Image Source="{Binding CoatOfArms, Mode=TwoWay}" Width="Auto" Height="Auto"/>
+            </StackPanel >
+        </Grid>
+        <CoreViews:DetailViewBottomContent Grid.Row="1" VerticalContentAlignment="Center"/>
     </Grid>
 </core:UserControlBase>
