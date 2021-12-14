@@ -44,6 +44,9 @@ namespace SportLeagueOverview.Core.Common
         Command.CommandText = $"SELECT * FROM {tmpEntity.GetType().GetProperty("TableName").GetValue(tmpEntity)}";
         var Reader = Command.ExecuteReader();
         var Properties = typeof(T).GetProperties();
+        var Columns = new Dictionary<string, ColumnNameAttribute>();
+        Properties.ToList().ForEach(x => Columns.Add(x.Name, (ColumnNameAttribute)Attribute.GetCustomAttribute(x, typeof(ColumnNameAttribute), true)));
+        Columns.Where(x => x.Value == null).Select(y => y.Key).ToList().ForEach(x => Columns.Remove(x));
         while (Reader.Read())
         {
           T Entity = Activator.CreateInstance<T>();
@@ -51,9 +54,10 @@ namespace SportLeagueOverview.Core.Common
           {
             var ColumnName = Reader.GetName(i);
             tmpColumnName = ColumnName;
-            if (Properties.Any(x => x.Name == ColumnName))
+            if (Columns.Any(x => x.Value.ColumnName == ColumnName))
             {
-              var PropertyInfo = Properties.First(x => x.Name == ColumnName);
+              var PropertyName = Columns.FirstOrDefault(x => x.Value.ColumnName.Equals(ColumnName)).Key;
+              var PropertyInfo = Properties.First(x => x.Name == PropertyName);
               var FieldValue = Reader.GetFieldValue<object>(i);
               if (FieldValue == DBNull.Value)
                 continue;
