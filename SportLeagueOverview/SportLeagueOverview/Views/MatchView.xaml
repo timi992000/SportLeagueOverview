@@ -9,7 +9,7 @@
     <core:UserControlBase.LayoutTransform>
         <ScaleTransform CenterX="0" ScaleX="{Binding ScalingValue}" ScaleY="{Binding ScalingValue}"/>
     </core:UserControlBase.LayoutTransform>
-    <Grid Margin="10 10">
+    <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition />
             <ColumnDefinition Width="5" />
