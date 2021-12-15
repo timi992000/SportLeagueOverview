@@ -73,13 +73,13 @@
 
                     <controls:OwnGlyphItem Label="Mannschaft">
                         <mah:HamburgerMenuGlyphItem.Tag>
-                            <local:MannschaftView/>
+                            <local:TeamView/>
                         </mah:HamburgerMenuGlyphItem.Tag>
                     </controls:OwnGlyphItem>
 
                     <controls:OwnGlyphItem Label="Spieler" >
                         <mah:HamburgerMenuGlyphItem.Tag>
-                            <local:SpielerView/>
+                            <local:PlayerView/>
                         </mah:HamburgerMenuGlyphItem.Tag>
                     </controls:OwnGlyphItem>
 
@@ -91,7 +91,7 @@
 
                     <controls:OwnGlyphItem Label="Statistiken">
                         <mah:HamburgerMenuGlyphItem.Tag>
-                            <local:StatistikenView/>
+                            <local:StatisticsView/>
                         </mah:HamburgerMenuGlyphItem.Tag>
                     </controls:OwnGlyphItem>
 

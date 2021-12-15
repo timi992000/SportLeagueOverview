@@ -4,11 +4,11 @@ using SportLeagueOverview.ViewModels;
 namespace SportLeagueOverview.Views
 {
   /// <summary>
-  /// Interaction logic for StatistikenView.xaml
+  /// Interaction logic for StatisticsView.xaml
   /// </summary>
-  public partial class StatistikenView : UserControlBase
+  public partial class StatisticsView : UserControlBase
   {
-    public StatistikenView()
+    public StatisticsView()
     {
       InitializeComponent();
       DataContext = new StatisticsViewModel();
