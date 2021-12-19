@@ -296,12 +296,12 @@ namespace SportLeagueOverview.Core
       EntitySpectator.InvokeDeleteCompleted(this, new EventArgs());
     }
 
-    public void Execute_Reload(object sender)
+    public virtual void Execute_Reload(object sender)
     {
       __DoReload();
     }
 
-    public void Execute_Cancel(object sender)
+    public virtual void Execute_Cancel(object sender)
     {
       if (__CancelRequested())
       {
@@ -310,7 +310,7 @@ namespace SportLeagueOverview.Core
       }
     }
 
-    public void Execute_New(object sender)
+    public virtual void Execute_New(object sender)
     {
       if (HasChanges)
         return;
@@ -336,10 +336,6 @@ namespace SportLeagueOverview.Core
       else if (Type == typeof(PersonEntity))
       {
         m_NewDialog.Content = new PlayerDetailView { DataContext = this };
-      }
-      else if (Type == typeof(MatchEntity))
-      {
-        m_NewDialog.Content = new SpieleDetailView { DataContext = this };
       }
       EntitySpectator.SaveCompleted += (sender, e) =>
       {

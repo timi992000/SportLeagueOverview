@@ -85,7 +85,7 @@
 
                     <controls:OwnGlyphItem Label="Spiele">
                         <mah:HamburgerMenuGlyphItem.Tag>
-                            <local:SpieleView/>
+                            <local:MatchView/>
                         </mah:HamburgerMenuGlyphItem.Tag>
                     </controls:OwnGlyphItem>
 
