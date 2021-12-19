@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace SportLeagueOverview.Core.Entitites
 {
-    public enum MatchState
+    public enum EventType
     {
-        Open,
-        Pending,
-        Done
+        YellowCard,
+        RedCard,
+        OwnGoal,
+        Goal
     }
 }
