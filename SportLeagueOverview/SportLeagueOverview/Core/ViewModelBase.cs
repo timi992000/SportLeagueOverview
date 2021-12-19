@@ -33,7 +33,7 @@ namespace SportLeagueOverview.Core
     private bool m_IsNew;
     private double m_ScalingValue;
 
-    public ViewModelBase(object ViewModel = null)
+    public ViewModelBase()
     {
       GlobalEventManager.KeyPressed += __KeysDown;
       __DoReload();
@@ -135,6 +135,7 @@ namespace SportLeagueOverview.Core
         if (!IsNew)
           m_OriginalCurrentItem = (T)(CurrentItem as EntityBase).Clone();
         OnPropertyChanged();
+        OnPropertyChanged(nameof(EntityBase.Adress));
         OnCurrentItemChanged();
         HasChanges = false;
         CurrentItemChanged?.Invoke(CurrentItem, new EventArgs());
@@ -185,10 +186,102 @@ namespace SportLeagueOverview.Core
 
     public Brush HasChangesBrush => HasChanges ? Brushes.Red : Brushes.Black;
 
+    public AdressEntity Adress
+    {
+      get => (AdressEntity)CurrentItem.GetType().GetProperty(nameof(Adress)).GetValue(CurrentItem);
+      set
+      {
+        CurrentItem.GetType().GetProperty(nameof(Adress)).SetValue(CurrentItem, value);
+        OnPropertyChanged(nameof(Adress));
+      }
+    }
+
+    #region [Adress]
+    public string Street
+    {
+      get
+      {
+        return Adress.GetType().GetProperty(nameof(Street)).GetValue(Adress).ToString();
+      }
+      set
+      {
+        Adress.GetType().GetProperty(nameof(Street)).SetValue(Adress, value);
+        OnPropertyChanged(nameof (Street));
+      }
+    }
+
+    public int HouseNumber
+    {
+      get
+      {
+        return Convert.ToInt32(Adress.GetType().GetProperty(nameof(HouseNumber)).GetValue(Adress));
+      }
+      set
+      {
+        Adress.GetType().GetProperty(nameof(HouseNumber)).SetValue(Adress, value);
+        OnPropertyChanged(nameof(HouseNumber));
+      }
+    }
+
+    public string AdressAddition
+    {
+      get
+      {
+        return Adress.GetType().GetProperty(nameof(AdressAddition)).GetValue(Adress).ToString();
+      }
+      set
+      {
+        Adress.GetType().GetProperty(nameof(AdressAddition)).SetValue(Adress, value);
+        OnPropertyChanged(nameof(AdressAddition));
+      }
+    }
+
+    public int ZipCode
+    {
+      get
+      {
+        return Convert.ToInt32(Adress.GetType().GetProperty(nameof(ZipCode)).GetValue(Adress));
+      }
+      set
+      {
+        Adress.GetType().GetProperty(nameof(ZipCode)).SetValue(Adress, value);
+        OnPropertyChanged(nameof(ZipCode));
+      }
+    }
+
+    public string City
+    {
+      get
+      {
+        return Adress.GetType().GetProperty(nameof(City)).GetValue(Adress).ToString();
+      }
+      set
+      {
+        Adress.GetType().GetProperty(nameof(City)).SetValue(Adress, value);
+        OnPropertyChanged(nameof(City));
+      }
+    }
+
+    #endregion
+
     public void Execute_Save(object sender)
     {
       HasChanges = false;
       EntitySpectator.InvokeSaveRequested(this, new EventArgs());
+      var Adress = (AdressEntity)CurrentItem.GetType().GetProperty(nameof(EntityBase.Adress)).GetValue(CurrentItem);
+      if (Adress != null)
+      {
+        Adress.IsNew = Adress.IsAdressNew;
+        var AdressCount = DBAccess.CountEntities(Adress);
+        DBAccess.SaveEntity(Adress);
+        if (AdressCount < DBAccess.CountEntities(Adress))
+        {
+          var NewId = DBAccess.GetHighestId(Adress);
+          var AdressIdProperty = CurrentItem.GetType().GetProperty("AdressId");
+          if (AdressIdProperty != null)
+            AdressIdProperty.SetValue(CurrentItem, NewId);
+        }
+      }
       DBAccess.SaveEntity(CurrentItem);
       CurrentItem = Activator.CreateInstance<T>();
       EntitySpectator.InvokeSaveCompleted(this, new EventArgs());
@@ -223,6 +316,7 @@ namespace SportLeagueOverview.Core
         return;
       IsNew = true;
       CurrentItem = Activator.CreateInstance<T>();
+      CurrentItem.GetType().GetProperty(nameof(EntityBase.Adress)).SetValue(CurrentItem, new AdressEntity());
       CurrentItem.GetType().GetProperty("IsNew").SetValue(CurrentItem, true);
       m_NewDialog = new Window();
       m_NewDialog.Title = $"Neu - {typeof(T).Name}";

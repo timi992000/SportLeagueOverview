@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
 using SportLeagueOverview.Core.Attributes;
+using SportLeagueOverview.Core.Entitites;
 using SportLeagueOverview.Core.Extender;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,7 @@ namespace SportLeagueOverview.Core.Common
   public static class DBAccess
   {
     private static SqliteConnection m_Connection;
+    private static List<AdressEntity> m_Adresses;
 
     #region [Ctor]
     static DBAccess()
@@ -23,6 +25,11 @@ namespace SportLeagueOverview.Core.Common
         m_Connection = new SqliteConnection($"Data Source={Directory.GetCurrentDirectory()}\\FussballLigenÜbersicht.db");
         m_Connection.Open();
         __CreateTableSchema();
+        m_Adresses = ReadEntity<AdressEntity>();
+        EntitySpectator.SaveCompleted += (sender, e) =>
+        {
+          m_Adresses = ReadEntity<AdressEntity>();
+        };
       }
       catch (Exception ex)
       {
@@ -56,10 +63,15 @@ namespace SportLeagueOverview.Core.Common
             tmpColumnName = ColumnName;
             if (Columns.Any(x => x.Value.ColumnName == ColumnName))
             {
-              var PropertyName = Columns.FirstOrDefault(x => x.Value.ColumnName.Equals(ColumnName)).Key;
+              var ColumnProperty = Columns.FirstOrDefault(x => x.Value.ColumnName.Equals(ColumnName));
+              if (ColumnProperty.Key == null)
+                continue;
+              var PropertyName = ColumnProperty.Key;
               var PropertyInfo = Properties.First(x => x.Name == PropertyName);
               var FieldValue = Reader.GetFieldValue<object>(i);
               if (FieldValue == DBNull.Value)
+                continue;
+              if (PropertyInfo.PropertyType == typeof(AdressEntity))
                 continue;
               if (PropertyInfo.PropertyType == typeof(DateTime) && FieldValue.GetType() == typeof(string))
               {
@@ -88,6 +100,22 @@ namespace SportLeagueOverview.Core.Common
           }
           Result.Add(Entity);
         }
+        if (m_Adresses != null)
+          foreach (var Entity in Result)
+          {
+            var EntityType = Entity.GetType();
+            var AdressProperty = EntityType.GetProperty("AdressId");
+            if (AdressProperty != null)
+            {
+              var AdressId = AdressProperty.GetValue(Entity);
+              if (AdressId != null && m_Adresses != null)
+              {
+                var MatchingAdress = m_Adresses.FirstOrDefault(x => x.AdressId == Convert.ToInt32(AdressId));
+                if (MatchingAdress != null)
+                  EntityType.GetProperty(nameof(EntityBase.Adress)).SetValue(Entity, MatchingAdress);
+              }
+            }
+          }
         return Result;
       }
       catch (Exception ex)
@@ -106,6 +134,8 @@ namespace SportLeagueOverview.Core.Common
     {
       try
       {
+        if (Entity == null)
+          return;
         var PrimaryKeyColumn = Entity.GetPrimaryKeyColumn();
         string Cmd = string.Empty;
         string Columns = string.Empty;
@@ -120,13 +150,16 @@ namespace SportLeagueOverview.Core.Common
           Values += "VALUES (";
           var TableName = Entity.GetType().GetProperty("TableName").GetValue(Entity);
           var Properties = Entity.GetType().GetProperties(System.Reflection.BindingFlags.Public |
-            System.Reflection.BindingFlags.Instance |
-            System.Reflection.BindingFlags.DeclaredOnly);
+            System.Reflection.BindingFlags.Instance);
           int i = 0;
           foreach (var Property in Properties)
           {
-
             i++;
+            var IsDataColAttribute = (IsDataColumnAttribute)Attribute.GetCustomAttribute(Property, typeof(IsDataColumnAttribute), true);
+            if (IsDataColAttribute != null && !IsDataColAttribute.IsDataColumn)
+              continue;
+            if (Property.PropertyType == typeof(AdressEntity))
+              continue;
             var ColumnName = __GetColumnNameForProperty(Property);
             var FieldValue = Property.GetValue(Entity);
             if (i > Properties.Length || ColumnName.Equals(PrimaryKeyColumn) || FieldValue.IsNullOrEmpty())
@@ -156,6 +189,8 @@ namespace SportLeagueOverview.Core.Common
           Values += ")";
 
           Cmd += $"INSERT INTO {TableName} {Columns} {Values};";
+          if (Columns.Equals("()") || Values.Equals("()"))
+            return;
           var Result = ExecuteNonQuery(Cmd);
         }
       }
@@ -167,7 +202,12 @@ namespace SportLeagueOverview.Core.Common
 
     public static object GetPrimaryKeyColumn<T>(this T Entity)
     {
-      return Entity.GetType().GetProperty("PrimaryKeyColumn").GetValue(Entity);
+      return Entity.GetType().GetProperty(nameof(EntityBase.PrimaryKeyColumn)).GetValue(Entity);
+    }
+
+    public static object GetTableName<T>(this T Entity)
+    {
+      return Entity.GetType().GetProperty(nameof(EntityBase.TableName)).GetValue(Entity);
     }
 
     public static void UpdateEntity<T>(this T Entity)
@@ -189,6 +229,11 @@ namespace SportLeagueOverview.Core.Common
         foreach (var Property in Properties)
         {
           i++;
+          var IsDataColAttribute = (IsDataColumnAttribute)Attribute.GetCustomAttribute(Property, typeof(IsDataColumnAttribute), true);
+          if (IsDataColAttribute != null && !IsDataColAttribute.IsDataColumn)
+            continue;
+          if (Property.PropertyType == typeof(AdressEntity))
+            continue;
           var ColumnName = __GetColumnNameForProperty(Property);
           var FieldValue = Property.GetValue(Entity);
           if (i > Properties.Length || ColumnName.Equals(PrimaryKeyColumn) || FieldValue.IsNullOrEmpty())
@@ -233,7 +278,10 @@ namespace SportLeagueOverview.Core.Common
 
     private static string __GetColumnNameForProperty(System.Reflection.PropertyInfo property)
     {
-      var tmpColumnNameAttribute = Attribute.GetCustomAttributes(property, typeof(ColumnNameAttribute), true)[0];
+      var Attributes = Attribute.GetCustomAttributes(property, typeof(ColumnNameAttribute), true);
+      if (Attributes.Length == 0)
+        return string.Empty;
+      var tmpColumnNameAttribute = Attributes[0];
       string ColumnName = string.Empty;
       if (tmpColumnNameAttribute != null && tmpColumnNameAttribute is ColumnNameAttribute ColNameAtr)
         ColumnName = ColNameAtr.ColumnName;
@@ -367,24 +415,24 @@ namespace SportLeagueOverview.Core.Common
     #region [__CreateTableSchema]
     private static void __CreateTableSchema()
     {
-      var Cmd = "CREATE TABLE IF NOT EXISTS \"Adresse\" (	\"AdressId\"	INTEGER NOT NULL UNIQUE,	\"Straße\"	TEXT NOT NULL,	\"AdressZusatz\"	" +
+      var Cmd = "CREATE TABLE IF NOT EXISTS \"Adresse\" (	\"AdressId\"	INTEGER NOT NULL UNIQUE,	\"Straße\"	TEXT NOT NULL, \"Hausnummer\"	INTEGER NOT NULL,	\"AdressZusatz\"	" +
         "TEXT NOT NULL,	\"PLZ\"	INTEGER NOT NULL,	\"Stadt\"	TEXT NOT NULL,	PRIMARY KEY(\"AdressId\" AUTOINCREMENT));";
 
       Cmd += "CREATE TABLE IF NOT EXISTS \"Ereignis\" ( \"EreignisId\"  INTEGER NOT NULL UNIQUE, \"MannId\"  INTEGER NOT NULL," +
         "\"EreignisTyp\" INTEGER NOT NULL,\"Minute\"  INTEGER,	\"SpielerId\" INTEGER,	FOREIGN KEY(\"MannId\") REFERENCES \"Mannschaft\"" +
         "(\"MannschaftId\"),	FOREIGN KEY(\"SpielerId\") REFERENCES \"Person\"(\"PersonId\"),	PRIMARY KEY(\"EreignisId\" AUTOINCREMENT)); ";
 
-      Cmd += "CREATE TABLE IF NOT EXISTS \"Mannschaft\" (  \"MannschaftId\"  INTEGER NOT NULL UNIQUE,  \"Name\"  TEXT NOT NULL,	\"Gruendungsjahr\"  INTEGER," +
-        "	\"Wappen\"  BLOB,	\"TrainerId\" INTEGER,	FOREIGN KEY(\"TrainerId\") REFERENCES \"Person\"(\"PersonId\"),	PRIMARY KEY(\"MannschaftId\" AUTOINCREMENT)); ";
+      Cmd += "CREATE TABLE IF NOT EXISTS \"Mannschaft\" (  \"MannschaftId\"  INTEGER NOT NULL UNIQUE,  \"Name\"  TEXT NOT NULL, \"AdressId\"  INTEGER,	\"Gruendungsjahr\"  INTEGER," +
+        "	\"Wappen\"  BLOB,	\"TrainerId\" INTEGER,	FOREIGN KEY(\"TrainerId\") REFERENCES \"Person\"(\"PersonId\"),	PRIMARY KEY(\"MannschaftId\" AUTOINCREMENT), FOREIGN KEY(\"AdressId\") REFERENCES \"Adresse\"(\"AdressId\")); ";
 
       Cmd += "CREATE TABLE IF NOT EXISTS \"Person\" (  \"PersonId\"  INTEGER NOT NULL UNIQUE,  \"Name\"  TEXT,	\"AktuelleMannId\"  INTEGER,	\"Rückennummer\"  INTEGER,	\"IsTrainer\"" +
-        " INTEGER NOT NULL,	\"Geburtsdatum\"  TEXT,	\"Bild\"  BLOB,	\"AdressId\"  INTEGER,	\"Eintrittsdatum\"  TEXT,	PRIMARY KEY(\"PersonId\" AUTOINCREMENT),	FOREIGN KEY(\"AktuelleMannId\") REFERENCES \"Mannschaft\"" +
-        "(\"MannschaftId\")); ";
+        " INTEGER NOT NULL,	\"Geburtsdatum\"  TEXT,	\"Bild\"  BLOB,	\"AdressId\"  INTEGER,	\"Eintrittsdatum\"  TEXT,	PRIMARY KEY(\"PersonId\" AUTOINCREMENT), FOREIGN KEY(\"AdressId\") REFERENCES \"Adresse\"(\"AdressId\")," +
+        "	FOREIGN KEY(\"AktuelleMannId\") REFERENCES \"Mannschaft\"(\"MannschaftId\")); ";
 
       Cmd += "CREATE TABLE IF NOT EXISTS \"Spiel\" ( \"SpielId\" INTEGER NOT NULL UNIQUE, \"Status\"  INTEGER NOT NULL, \"Anpfiff\" TEXT," +
-        "	\"HeimMannId\"  INTEGER,\"AuswaertsMannId\" INTEGER,	\"AustrgOrtId\" INTEGER,	PRIMARY KEY(\"SpielId\" AUTOINCREMENT)," +
+        "	\"HeimMannId\"  INTEGER,\"AuswaertsMannId\" INTEGER,	\"AdressId\" INTEGER,	PRIMARY KEY(\"SpielId\" AUTOINCREMENT)," +
         "	FOREIGN KEY(\"AuswaertsMannId\") REFERENCES \"Mannschaft\"(\"MannschaftId\"),	FOREIGN KEY(\"HeimMannId\") REFERENCES \"Mannschaft\"(\"MannschaftId\")," +
-        "	FOREIGN KEY(\"AustrgOrtId\") REFERENCES \"Adresse\"(\"AdressId\")); ";
+        "	FOREIGN KEY(\"AdressId\") REFERENCES \"Adresse\"(\"AdressId\")); ";
 
       ExecuteNonQuery(Cmd);
     }
@@ -394,6 +442,18 @@ namespace SportLeagueOverview.Core.Common
     {
       var Cmd = $"SELECT Count(*) FROM Mannschaft WHERE TrainerId = {TrainerId}";
       return Convert.ToBoolean(ExecuteScalar(Cmd));
+    }
+
+    public static int GetHighestId<T>(this T Entity)
+    {
+      var Cmd = $"SELECT MAX ({Entity.GetPrimaryKeyColumn()}) FROM {Entity.GetTableName()}";
+      return Convert.ToInt32(ExecuteScalar(Cmd));
+    }
+
+    public static int CountEntities<T>(this T Entity)
+    {
+      var Cmd = $"SELECT COUNT (*) FROM {Entity.GetTableName()}";
+      return Convert.ToInt32(ExecuteScalar(Cmd));
     }
 
     #region [__ThrowMessage]

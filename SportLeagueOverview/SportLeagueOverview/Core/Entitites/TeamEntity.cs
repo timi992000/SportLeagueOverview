@@ -29,5 +29,9 @@ namespace SportLeagueOverview.Core.Entitites
 
     [ColumnName("TrainerId")]
     public int CoachId { get; set; }
+
+    [DisplayName("Adress Id")]
+    [ColumnName("AdressId")]
+    public int AdressId { get; set; }
   }
 }

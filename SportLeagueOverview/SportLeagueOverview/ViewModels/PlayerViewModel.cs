@@ -12,6 +12,7 @@ namespace SportLeagueOverview.ViewModels
     public PlayerViewModel()
     {
       __AttachEvents();
+      Adress = new AdressEntity();
     }
 
     public string PlayerName

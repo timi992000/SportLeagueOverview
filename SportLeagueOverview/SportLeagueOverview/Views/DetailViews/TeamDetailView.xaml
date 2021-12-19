@@ -21,14 +21,14 @@
                 <RowDefinition MaxHeight="35"/>
                 <RowDefinition MaxHeight="35"/>
                 <RowDefinition MaxHeight="35"/>
-                <RowDefinition MaxHeight="35"/>
-                <RowDefinition MaxHeight="35"/>
-                <RowDefinition MaxHeight="35"/>
-                <RowDefinition MaxHeight="35"/>
-                <RowDefinition MaxHeight="35"/>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition MinWidth="130"/>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
@@ -78,6 +78,7 @@
                 </b:Interaction.Triggers>
                 <Image Source="{Binding CoatOfArms, Mode=TwoWay}" Width="Auto" Height="Auto"/>
             </StackPanel >
+            <controls:AdressControl Grid.Row="3" Grid.ColumnSpan="2"/>
         </Grid>
         <CoreViews:DetailViewBottomContent Grid.Row="1" VerticalContentAlignment="Center"/>
     </Grid>

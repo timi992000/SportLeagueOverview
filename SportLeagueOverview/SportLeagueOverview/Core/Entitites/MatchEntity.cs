@@ -1,4 +1,6 @@
-﻿using System;
+﻿using SportLeagueOverview.Core.Attributes;
+using System;
+using System.ComponentModel;
 
 namespace SportLeagueOverview.Core.Entitites
 {
@@ -13,8 +15,11 @@ namespace SportLeagueOverview.Core.Entitites
     public MatchState State { get; set; }
     public DateTime Kickoff { get; set; }
     public TeamEntity HomeTeam { get; set; }
-    public TeamEntity AwaTeam { get; set; }
-    public AdressEntity Venue { get; set; }
+    public TeamEntity AwayTeam { get; set; }
+
+    [DisplayName("Adress Id")]
+    [ColumnName("AdressId")]
+    public int AdressId { get; set; }
 
     public void ChangeStatus(MatchState NewState)
     {
