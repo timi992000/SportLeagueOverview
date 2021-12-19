@@ -8,11 +8,11 @@ using System.Windows.Controls;
 namespace SportLeagueOverview.Views
 {
   /// <summary>
-  /// Interaction logic for MannschaftView.xaml
+  /// Interaction logic for TeamView.xaml
   /// </summary>
-  public partial class MannschaftView : UserControlBase
+  public partial class TeamView : UserControlBase
   {
-    public MannschaftView()
+    public TeamView()
     {
       InitializeComponent();
       DataContext = new TeamViewModel();

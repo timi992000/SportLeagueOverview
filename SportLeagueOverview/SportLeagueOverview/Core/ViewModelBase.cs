@@ -237,11 +237,11 @@ namespace SportLeagueOverview.Core
       }
       else if (Type == typeof(TeamEntity))
       {
-        m_NewDialog.Content = new MannschaftDetailView { DataContext = this };
+        m_NewDialog.Content = new TeamDetailView { DataContext = this };
       }
       else if (Type == typeof(PersonEntity))
       {
-        m_NewDialog.Content = new SpielerDetailView { DataContext = this };
+        m_NewDialog.Content = new PlayerDetailView { DataContext = this };
       }
       EntitySpectator.SaveCompleted += (sender, e) =>
       {

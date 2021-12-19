@@ -17,11 +17,11 @@ using System.Windows.Shapes;
 namespace SportLeagueOverview.Views.DetailViews
 {
   /// <summary>
-  /// Interaction logic for MannschaftDetailView.xaml
+  /// Interaction logic for TeamDetailView.xaml
   /// </summary>
-  public partial class MannschaftDetailView : UserControlBase
+  public partial class TeamDetailView : UserControlBase
   {
-    public MannschaftDetailView()
+    public TeamDetailView()
     {
       InitializeComponent();
     }

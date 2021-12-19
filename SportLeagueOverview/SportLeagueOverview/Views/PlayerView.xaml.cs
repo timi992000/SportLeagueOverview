@@ -7,11 +7,11 @@ using System.Windows.Controls;
 namespace SportLeagueOverview.Views
 {
   /// <summary>
-  /// Interaction logic for SpielerView.xaml
+  /// Interaction logic for PlayerView.xaml
   /// </summary>
-  public partial class SpielerView : UserControlBase
+  public partial class PlayerView : UserControlBase
   {
-    public SpielerView()
+    public PlayerView()
     {
       InitializeComponent();
       DataContext = new PlayerViewModel();
