@@ -3,18 +3,19 @@ using SportLeagueOverview.ViewModels;
 using System;
 using System.ComponentModel;
 using System.Windows.Controls;
+using System.Windows.Input;
 
 namespace SportLeagueOverview.Views
 {
   /// <summary>
   /// Interaction logic for SpieleView.xaml
   /// </summary>
-  public partial class SpieleView : UserControlBase
+  public partial class MatchView : UserControlBase
   {
-    public SpieleView()
+    public MatchView()
     {
       InitializeComponent();
-      DataContext = new MatchViewModel();
+      DataContext = new MatchListViewModel();
     }
 
     private void DataGrid_AutoGeneratingColumn(object sender, System.Windows.Controls.DataGridAutoGeneratingColumnEventArgs e)
@@ -29,6 +30,21 @@ namespace SportLeagueOverview.Views
       //{
       //  e.Cancel = true;
       //}
+    }
+
+    public void DoubleClickHandler(object sender, MouseEventArgs e)
+    {
+      var item = sender as ListBoxItem;
+      if (item.DataContext is MatchViewModel MatchDetailViewModel)
+      {
+        var Window = new MatchDetailWindow(MatchDetailViewModel);
+        Window.ShowDialog();
+        if (DataContext is MatchListViewModel MatchViewModel)
+        {
+          MatchViewModel.Reload.Execute(null);
+        }
+      }
+
     }
   }
 }

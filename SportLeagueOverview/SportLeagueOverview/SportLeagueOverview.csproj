@@ -7,10 +7,47 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Views\Images\done.png" />
+    <None Remove="Views\Images\goal.png" />
+    <None Remove="Views\Images\open.png" />
+    <None Remove="Views\Images\owngoal.png" />
+    <None Remove="Views\Images\pending.png" />
+    <None Remove="Views\Images\redCard.png" />
+    <None Remove="Views\Images\yellowCard.png" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="MahApps.Metro" Version="2.4.9" />
     <PackageReference Include="MahApps.Metro.IconPacks" Version="4.11.0" />
     <PackageReference Include="MahApps.Metro.Resources" Version="0.6.1" />
     <PackageReference Include="Microsoft.Data.Sqlite" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Resource Include="Views\Images\done.png" />
+    <Resource Include="Views\Images\goal.png" />
+    <Resource Include="Views\Images\open.png" />
+    <Resource Include="Views\Images\owngoal.png" />
+    <Resource Include="Views\Images\pending.png" />
+    <Resource Include="Views\Images\redCard.png" />
+    <Resource Include="Views\Images\yellowCard.png" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Window\EventDetailWindow.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Page Update="Views\MatchView.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Update="Window\EventDetailWindow.xaml">
+      <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
+      <SubType>Designer</SubType>
+    </Page>
   </ItemGroup>
 
 </Project>

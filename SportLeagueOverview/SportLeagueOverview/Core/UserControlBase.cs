@@ -2,7 +2,6 @@
 using SportLeagueOverview.Core.Controls;
 using SportLeagueOverview.Core.Events;
 using SportLeagueOverview.Core.Extender;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
@@ -37,6 +36,7 @@ namespace SportLeagueOverview.Core
       __SetRulesForAllLabels();
       __SetRulesForAllDatePickers();
       __SetRulesForAllDataGrids();
+      __SetRulesForAllListBoxs();
     }
 
     private void __SetRulesForAllTextBoxes()
@@ -118,6 +118,34 @@ namespace SportLeagueOverview.Core
           tmpDataGrid.IsReadOnly = true;
           tmpDataGrid.SelectionMode = DataGridSelectionMode.Single;
           tmpDataGrid.AutoGenerateColumns = true;
+          tmpDataGrid.ContextMenu = new ContextMenu();
+
+          var DeleteMenuItem = new MenuItem();
+          DeleteMenuItem.SetBinding(MenuItem.CommandProperty, "Delete");
+          DeleteMenuItem.Header = "Delete";
+
+          var ReloadMenuItem = new MenuItem();
+          ReloadMenuItem.SetBinding(MenuItem.CommandProperty, "Reload");
+          ReloadMenuItem.Header = "Reload";
+
+          var NewMenuItem = new MenuItem();
+          NewMenuItem.SetBinding(MenuItem.CommandProperty, "New");
+          NewMenuItem.Header = "New";
+
+          tmpDataGrid.ContextMenu.Items.Add(DeleteMenuItem);
+          tmpDataGrid.ContextMenu.Items.Add(ReloadMenuItem);
+          tmpDataGrid.ContextMenu.Items.Add(NewMenuItem);
+        }
+      }
+    }
+
+    private void __SetRulesForAllListBoxs()
+    {
+      var AllListBoxs = FindVisualChildren<ListBox>(this).ToList();
+      if (AllListBoxs.Any())
+      {
+        foreach (var tmpDataGrid in AllListBoxs)
+        {
           tmpDataGrid.ContextMenu = new ContextMenu();
 
           var DeleteMenuItem = new MenuItem();

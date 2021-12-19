@@ -11,7 +11,7 @@ namespace SportLeagueOverview
   {
     private TeamViewModel m_MannschaftViewModel;
     private PlayerViewModel m_SpielerViewModel;
-    private MatchViewModel m_SpieleViewModel;
+    private MatchListViewModel m_SpieleViewModel;
     private StatisticsViewModel m_StatistikenViewModel;
 
     public MainViewModel()
@@ -40,12 +40,12 @@ namespace SportLeagueOverview
       }
     }
 
-    public MatchViewModel SpieleViewModel
+    public MatchListViewModel SpieleViewModel
     {
       get
       {
         if (m_SpieleViewModel == null)
-          m_SpieleViewModel = new MatchViewModel();
+          m_SpieleViewModel = new MatchListViewModel();
         return m_SpieleViewModel;
       }
     }
