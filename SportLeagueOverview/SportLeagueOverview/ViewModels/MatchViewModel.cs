@@ -5,8 +5,6 @@ using SportLeagueOverview.Core.Enums;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Globalization;
 using System.Linq;
 using System.Windows.Media;
 
@@ -19,26 +17,15 @@ namespace SportLeagueOverview.ViewModels
     private int m_HomeGoals;
     private int m_AwayGoals;
 
-    public MatchViewModel(MatchEntity CurrentMatch)
+    public MatchViewModel(bool IsNew = false)
     {
+      CurrentItem.IsNew = IsNew;
       Events = new ObservableCollection<EventViewModel>();
-
       __RefreshTeams();
-      if (CurrentMatch == null)
-      {
-        CurrentItem = new MatchEntity()
-        {
-          Kickoff = DateTime.Now,
-          State = MatchState.Pending,
-          HomeTeam = Teams.First(x => x.TeamId == 1),
-          AwayTeam = Teams.First(x => x.TeamId == 2),
-          Venue = new AdressEntity { City = "Köln" },
-          IsNew = true,
-        };
-        IsNew = true;
-      }
       RefreshEvents();
     }
+
+    public bool IsNewMatch { get; set; }
 
     public string HomeTeamName
     {
@@ -173,9 +160,18 @@ namespace SportLeagueOverview.ViewModels
       get => CurrentItem.State;
       set
       {
-        CurrentItem.State = value;
+        CurrentItem.ChangeStatus(value);
         OnPropertyChanged(nameof(State));
       }
+    }
+
+    public void ReloadEvents()
+    {
+      RefreshEvents();
+      ReloadRequested += (sender, e) =>
+      {
+        RefreshEvents();
+      };
     }
 
     public MatchState[] StateValues => (MatchState[])Enum.GetValues(typeof(MatchState));
@@ -240,57 +236,21 @@ namespace SportLeagueOverview.ViewModels
 
     public override void Execute_New(object sender)
     {
-      var Window = new EventDetailWindow(new EventViewModel(this, new EventEntity() , false) { IsNew = true });
+      //CurrentItem = new MatchEntity { IsNew = true };
+      var Window = new EventDetailWindow(new EventViewModel(this, new EventEntity() { IsNew = true, MatchId = CurrentItem.MatchId}, false) { IsNew = true });
       Window.ShowDialog();
       this.Reload.Execute(null);
     }
 
     public void RefreshEvents()
     {
-      //var EventEntities = DBAccess.ReadEntity<EventEntity>().Where(x => x.MatchId == CurrentItem.MatchId);
-      var EventEntities = new List<EventEntity> {new EventEntity{
-                Player = new PersonEntity{PlayerName = "Tommy"},
-                MatchId = CurrentItem.MatchId,
-                TeamId = 2,
-                EventId = 12,
-                Minute = 12,
-                EventType = EventType.RedCard,
-            } };
-      EventEntities.Add(new EventEntity
-      {
-        Player = new PersonEntity { PlayerName = "Hans Güntermalman" },
-        MatchId = CurrentItem.MatchId,
-        TeamId = 1,
-        EventId = 42,
-        Minute = 10,
-        EventType = EventType.Goal,
-      });
-
-      EventEntities.Add(new EventEntity
-      {
-        Player = new PersonEntity { PlayerName = "Leon" },
-        MatchId = CurrentItem.MatchId,
-        TeamId = 2,
-        EventId = 42,
-        Minute = 10,
-        EventType = EventType.OwnGoal,
-      });
-
-      EventEntities.Add(new EventEntity
-      {
-        Player = new PersonEntity { PlayerName = "Leon" },
-        MatchId = CurrentItem.MatchId,
-        TeamId = 2,
-        EventId = 42,
-        Minute = 50,
-        EventType = EventType.YellowCard,
-      });
-
+      var EventEntities = DBAccess.ReadEntity<EventEntity>().Where(x => x.MatchId == CurrentItem.MatchId);
       EventEntities = EventEntities.OrderBy(x => x.Minute).ToList();
       foreach (var Event in EventEntities)
       {
         Events.Add(new EventViewModel(this, Event, Event.TeamId == CurrentItem.HomeTeam.TeamId));
       }
+      OnPropertyChanged(nameof(Events));
       __RefreshGoals();
     }
 

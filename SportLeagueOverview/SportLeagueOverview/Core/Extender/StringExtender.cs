@@ -16,7 +16,7 @@ namespace SportLeagueOverview.Core.Extender
 
     public static bool IsNullOrEmpty(this object Value)
     {
-      return Value == null || Value.ToString().Trim().Length == 0;
+      return Value == null || Value.ToString()?.Trim().Length == 0;
     }
 
     public static bool IsNotNullOrEmpty(this string Value) => !IsNullOrEmpty(Value);

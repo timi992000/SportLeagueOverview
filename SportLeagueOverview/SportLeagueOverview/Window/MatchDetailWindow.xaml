@@ -48,7 +48,7 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <ComboBox Text="Heimmannschaft auswählen"  Grid.Column="0" HorizontalAlignment="Left" HorizontalContentAlignment="Right" Width="400" ItemsSource="{Binding Teams}" SelectedItem="{Binding HomeTeam}" VerticalAlignment="Center" FontSize="20" IsEnabled="{Binding IsNew}"/>
+            <ComboBox Grid.Column="0" HorizontalAlignment="Left" HorizontalContentAlignment="Right" Width="400" ItemsSource="{Binding Teams}" SelectedItem="{Binding HomeTeam}" VerticalAlignment="Center" FontSize="20" IsEnabled="{Binding IsNewMatch}"/>
 
             <Image Grid.Column="1" Source="{Binding HomeCoatOfArms, Mode=OneWay}" Margin="10 0 10 0"  RenderOptions.BitmapScalingMode="Fant"
                    Stretch="Fill" Width="80" Height="80"/>
@@ -62,7 +62,7 @@
             <Image  Grid.Column="5" Source="{Binding AwayCoatOfArms, Mode=OneWay}" Margin="10 0 10 0" RenderOptions.BitmapScalingMode="Fant"
                    Stretch="Fill" Width="80" Height="80"/>
 
-            <ComboBox Text="Auswärtsmannschaft auswählen"  Grid.Column="6" ItemsSource="{Binding Teams}" SelectedItem="{Binding AwayTeam}" Width="400"  FontSize="20" VerticalAlignment="Center" IsEnabled="{Binding IsNew}"/>
+            <ComboBox Grid.Column="6" ItemsSource="{Binding Teams}" SelectedItem="{Binding AwayTeam}" Width="400"  FontSize="20" VerticalAlignment="Center" IsEnabled="{Binding IsNewMatch}"/>
         </Grid>
 
         <Label Content="Events" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0 20 0 0" Height="60" FontSize="35" FontWeight="Bold" Grid.Row="3"/>
@@ -71,7 +71,7 @@
         <Label Content="Minute" HorizontalAlignment="Center" VerticalAlignment="Bottom" Grid.Row="4"/>
 
         <ListBox  Grid.Row="5"  Background="Transparent" BorderBrush="Transparent"  Width="800"
-                  BorderThickness="0" Padding="0"  SelectionMode="Single" ItemsSource="{Binding Events}" >
+                  BorderThickness="0" Padding="0"  SelectionMode="Single" ItemsSource="{Binding Events, Mode=TwoWay}" >
             <ListBox.ContextMenu>
                 <ContextMenu>
                     <MenuItem Header="Neu" Command="{Binding New}"></MenuItem>

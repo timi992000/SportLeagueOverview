@@ -25,7 +25,6 @@ namespace SportLeagueOverview
     public MatchDetailWindow(MatchViewModel MatchDetailViewModel)
     {
       DataContext = MatchDetailViewModel;
-      var AllListBoxs = UserControlBase.FindVisualChildren<ListBox>(this).ToList();
       InitializeComponent();
     }
 

@@ -10,8 +10,8 @@ namespace SportLeagueOverview.Core.Enums
 {
   public enum MatchState
   { 
-    Open,
-    Pending,
-    Done
+    Open = 1,
+    Pending = 2,
+    Done = 3
   }
 }

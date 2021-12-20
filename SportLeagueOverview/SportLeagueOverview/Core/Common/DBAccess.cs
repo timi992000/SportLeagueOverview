@@ -39,16 +39,19 @@ namespace SportLeagueOverview.Core.Common
     #endregion
 
     #region [ReadEntity]
-    public static List<T> ReadEntity<T>()
+    public static List<T> ReadEntity<T>(List<int> Ids = null, bool IsSubCall = false)
     {
       string tmpColumnName = string.Empty;
       try
       {
         var tmpEntity = Activator.CreateInstance<T>();
+        var PrimaryKeyColumn = tmpEntity.GetPrimaryKeyColumn();
         var Result = new List<T>();
         __OpenIfNeeded();
         var Command = m_Connection.CreateCommand();
         Command.CommandText = $"SELECT * FROM {tmpEntity.GetType().GetProperty("TableName").GetValue(tmpEntity)}";
+        if (Ids != null && Ids.Any())
+          Command.CommandText += $" WHERE {PrimaryKeyColumn} IN ({string.Join(",", Ids)})";
         var Reader = Command.ExecuteReader();
         var Properties = typeof(T).GetProperties();
         var Columns = new Dictionary<string, ColumnNameAttribute>();
@@ -125,7 +128,8 @@ namespace SportLeagueOverview.Core.Common
       }
       finally
       {
-        m_Connection.Close();
+        if(!IsSubCall)
+          m_Connection.Close();
       }
     }
     #endregion
@@ -418,7 +422,7 @@ namespace SportLeagueOverview.Core.Common
       var Cmd = "CREATE TABLE IF NOT EXISTS \"Adresse\" (	\"AdressId\"	INTEGER NOT NULL UNIQUE,	\"Straße\"	TEXT NOT NULL, \"Hausnummer\"	INTEGER NOT NULL,	\"AdressZusatz\"	" +
         "TEXT NOT NULL,	\"PLZ\"	INTEGER NOT NULL,	\"Stadt\"	TEXT NOT NULL,	PRIMARY KEY(\"AdressId\" AUTOINCREMENT));";
 
-      Cmd += "CREATE TABLE IF NOT EXISTS \"Ereignis\" ( \"EreignisId\"  INTEGER NOT NULL UNIQUE, \"MannId\"  INTEGER NOT NULL," +
+      Cmd += "CREATE TABLE IF NOT EXISTS \"Ereignis\" ( \"EreignisId\"  INTEGER NOT NULL UNIQUE, \"SpielId\"  INTEGER NOT NULL, \"MannId\"  INTEGER NOT NULL," +
         "\"EreignisTyp\" INTEGER NOT NULL,\"Minute\"  INTEGER,	\"SpielerId\" INTEGER,	FOREIGN KEY(\"MannId\") REFERENCES \"Mannschaft\"" +
         "(\"MannschaftId\"),	FOREIGN KEY(\"SpielerId\") REFERENCES \"Person\"(\"PersonId\"),	PRIMARY KEY(\"EreignisId\" AUTOINCREMENT)); ";
 
@@ -446,7 +450,7 @@ namespace SportLeagueOverview.Core.Common
 
     public static int GetHighestId<T>(this T Entity)
     {
-      var Cmd = $"SELECT MAX ({Entity.GetPrimaryKeyColumn()}) FROM {Entity.GetTableName()}";
+      var Cmd = $"SELECT COALESCE((SELECT MAX ({Entity.GetPrimaryKeyColumn()}) FROM {Entity.GetTableName()}), 0)";
       return Convert.ToInt32(ExecuteScalar(Cmd));
     }
 

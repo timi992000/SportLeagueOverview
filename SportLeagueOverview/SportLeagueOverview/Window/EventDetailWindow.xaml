@@ -47,7 +47,7 @@
                    VerticalAlignment="Top"
                    Margin="0 0 0 5"/>
 
-            <ComboBox Text="Mannschaft auswählen"  
+            <ComboBox DisplayMemberPath="TeamName" 
                       Grid.Column="1" 
                       Grid.Row="1"
                       Margin="0 0 0 5"
@@ -61,12 +61,12 @@
                    VerticalAlignment="Top"
                    Margin="0 0 0 5"/>
 
-            <ComboBox ItemsSource="{Binding PlayerFromTeam}"
+            <ComboBox ItemsSource="{Binding PlayersForTeam}"
                       SelectedItem="{Binding Player}"
-                      Text="Spielername auswählen"
+                      DisplayMemberPath="PlayerName"
                       Grid.Row="2"
                      Grid.Column="1"
-                      IsEnabled="{Binding TeamSelected}"
+                      IsEnabled="{Binding SelectedTeam}"
                      Margin="0 0 0 5"/>
 
             <Label Content="Eventart"
@@ -80,7 +80,7 @@
                       ItemsSource="{Binding EventTypes}" 
                       SelectedItem="{Binding SelectedEventType, Mode=TwoWay}" 
                       Text="Event auswählen" 
-                      IsEnabled="{Binding TeamSelected}"
+                      IsEnabled="{Binding SelectedTeam}"
                       Margin="0 0 0 5">
             </ComboBox>
 
@@ -92,7 +92,7 @@
                                  Grid.Column="1"
                                  MaxLength="4"
                                  MaxLines="1"
-                                 IsEnabled="{Binding TeamSelected}"
+                                 IsEnabled="{Binding SelectedTeam}"
                                  Margin="0 0 0 5"
                                  BorderBrush="{Binding HasChangesBrush}"/>
 
