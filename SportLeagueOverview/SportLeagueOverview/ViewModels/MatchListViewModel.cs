@@ -11,17 +11,17 @@ namespace SportLeagueOverview.ViewModels
       : base(false)
     {
       DisplayMatches = new ObservableCollection<MatchViewModel>();
-      CurrentItems.ForEach(x => DisplayMatches.Add(new MatchViewModel()));
+      CurrentItems.ForEach(x => DisplayMatches.Add(new MatchViewModel(x)));
       EntitySpectator.EntitiesChanges += (sender, e) =>
       {
         Execute_Reload(this);
         DisplayMatches.Clear();
-        CurrentItems.ForEach(x => DisplayMatches.Add(new MatchViewModel()));
+        CurrentItems.ForEach(x => DisplayMatches.Add(new MatchViewModel(x)));
       }; 
       ReloadRequested += (sender, e) =>
       {
         DisplayMatches.Clear();
-        CurrentItems.ForEach(x => DisplayMatches.Add(new MatchViewModel()));
+        CurrentItems.ForEach(x => DisplayMatches.Add(new MatchViewModel(x)));
       };
       //DisplayMatches.Add(new MatchViewModel());
     }
@@ -44,7 +44,7 @@ namespace SportLeagueOverview.ViewModels
     {
       CurrentItem = new MatchEntity() { IsNew = true };
       //var NewId = DBAccess.GetHighestId(new MatchEntity()) + 1;
-      var Window = new MatchDetailWindow(new MatchViewModel(true) { IsNewMatch = true });
+      var Window = new MatchDetailWindow(new MatchViewModel(CurrentItem ,true) { IsNewMatch = true });
       Window.ShowDialog();
       this.Reload.Execute(null);
     }

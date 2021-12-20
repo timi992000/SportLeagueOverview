@@ -17,8 +17,9 @@ namespace SportLeagueOverview.ViewModels
     private int m_HomeGoals;
     private int m_AwayGoals;
 
-    public MatchViewModel(bool IsNew = false)
+    public MatchViewModel(MatchEntity CurrentItem, bool IsNew = false)
     {
+      this.CurrentItem = CurrentItem;
       CurrentItem.IsNew = IsNew;
       Events = new ObservableCollection<EventViewModel>();
       __RefreshTeams();
