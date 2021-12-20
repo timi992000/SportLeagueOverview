@@ -200,7 +200,7 @@ namespace SportLeagueOverview.ViewModels
     {
       get
       {
-        return CurrentItem?.HomeTeam;
+        return Teams.FirstOrDefault(x => x.TeamId == CurrentItem?.HomeTeam.TeamId);
       }
       set
       {
@@ -213,7 +213,7 @@ namespace SportLeagueOverview.ViewModels
     {
       get
       {
-        return CurrentItem?.AwayTeam;
+        return Teams.FirstOrDefault(x => x.TeamId == CurrentItem?.AwayTeam.TeamId);
       }
       set
       {
