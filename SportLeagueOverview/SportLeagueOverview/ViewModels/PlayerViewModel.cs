@@ -2,16 +2,21 @@
 using SportLeagueOverview.Core.Common;
 using SportLeagueOverview.Core.Entitites;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Windows.Media;
 
 namespace SportLeagueOverview.ViewModels
 {
   public class PlayerViewModel : ViewModelBase<PersonEntity>
   {
+    private List<TeamEntity> m_Teams;
 
     public PlayerViewModel()
     {
       __AttachEvents();
+      Adress = new AdressEntity();
+      __RefreshTeams();
     }
 
     public string PlayerName
@@ -84,12 +89,48 @@ namespace SportLeagueOverview.ViewModels
       }
     }
 
+    public List<TeamEntity> Teams
+    {
+      get
+      {
+        return m_Teams;
+      }
+    }
+
+
+    public TeamEntity Team
+    {
+      get => Teams.FirstOrDefault(x => x.TeamId == CurrentItem.TeamId);
+      set
+      {
+        if (value == null)
+          return;
+        CurrentItem.TeamId = value.TeamId;
+        OnPropertyChanged(nameof(Team));
+        OnPropertyChanged(nameof(CurrentItem.TeamId));
+      }
+    }
+
     private void __AttachEvents()
     {
       ImageSelected += (sender, e) =>
       {
         ProfilePicture = (ImageSource)sender;
       };
+      EntitySpectator.SaveCompleted += (sender, EventArgs) =>
+      {
+        __RefreshTeams();
+      };
+      EntitySpectator.DeleteCompleted += (sender, EventArgs) =>
+      {
+        __RefreshTeams();
+      };
+    }
+    private void __RefreshTeams()
+    {
+      m_Teams = DBAccess.ReadEntity<TeamEntity>();
+      OnPropertyChanged(nameof(Teams));
+      OnPropertyChanged(nameof(Teams));
     }
 
     public override void Execute_Delete(object sender)

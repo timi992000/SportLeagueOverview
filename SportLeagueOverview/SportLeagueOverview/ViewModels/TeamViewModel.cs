@@ -16,6 +16,7 @@ namespace SportLeagueOverview.ViewModels
     {
       __RefreshTrainer();
       __AttachEvents();
+      Adress = new AdressEntity();
     }
 
     public string TeamName

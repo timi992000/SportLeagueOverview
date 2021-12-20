@@ -34,7 +34,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Window\EventDetailWindow.xaml.cs">
+    <Compile Update="Dialogs\EventDetailWindow.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
@@ -44,7 +44,7 @@
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Update="Window\EventDetailWindow.xaml">
+    <Page Update="Dialogs\EventDetailWindow.xaml">
       <XamlRuntime>$(DefaultXamlRuntime)</XamlRuntime>
       <SubType>Designer</SubType>
     </Page>

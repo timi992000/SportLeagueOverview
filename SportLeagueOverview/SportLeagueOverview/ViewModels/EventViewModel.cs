@@ -4,6 +4,7 @@ using SportLeagueOverview.Core.Entitites;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,16 +14,19 @@ namespace SportLeagueOverview.ViewModels
 {
   public class EventViewModel : ViewModelBase<EventEntity>
   {
+    private TeamEntity m_SelectedTeam;
+
     public EventViewModel(MatchViewModel Parent, EventEntity Event, bool IsHomeTeam)
     {
+      Event.MatchId = Parent.CurrentItem.MatchId;
       CurrentItem = Event;
       this.Parent = Parent;
       this.IsHomeTeam = IsHomeTeam;
+      PlayersForTeam = new ObservableCollection<PersonEntity>();
       if (Event.TeamId != 0)
       {
         SelectedTeam = Teams.FirstOrDefault(x => x.TeamId == Event.TeamId);
       }
-      PlayersForTeam = new ObservableCollection<PersonEntity>();
       __RefreshPlayer();
       OnPropertyChanged(nameof(IsHomeTeam));
       OnPropertyChanged(nameof(IsAwayTeam));
@@ -35,8 +39,8 @@ namespace SportLeagueOverview.ViewModels
 
     public string PlayerName
     {
-      get { return CurrentItem.Player.PlayerName; }
-      set { CurrentItem.Player.PlayerName = value; OnPropertyChanged(nameof(PlayerName)); }
+      get { return CurrentItem.Person.PlayerName; }
+      set { CurrentItem.Person.PlayerName = value; OnPropertyChanged(nameof(PlayerName)); }
     }
     public EventType EventType
     {
@@ -54,7 +58,18 @@ namespace SportLeagueOverview.ViewModels
 
     public TeamEntity SelectedTeam
     {
-      get; set;
+      get
+      {
+        return m_SelectedTeam;
+      }
+      set
+      {
+        m_SelectedTeam = value;
+        CurrentItem.TeamId = value.TeamId;
+        OnPropertyChanged(nameof(SelectedTeam));
+        __RefreshPlayer();
+        OnPropertyChanged(nameof(PlayersForTeam));
+      }
     }
 
     public ObservableCollection<TeamEntity> Teams
@@ -86,9 +101,6 @@ namespace SportLeagueOverview.ViewModels
             };
     }
 
-
-
-
     public bool IsTeamSelected { get => SelectedTeam != null; }
     public ObservableCollection<PersonEntity> PlayersForTeam { get; set; }
 
@@ -96,11 +108,11 @@ namespace SportLeagueOverview.ViewModels
     {
       get
       {
-        return CurrentItem.Player;
+        return CurrentItem.Person;
       }
       set
       {
-        CurrentItem.Player = value;
+        CurrentItem.Person = value;
         OnPropertyChanged(nameof(Player));
       }
     }
@@ -109,6 +121,7 @@ namespace SportLeagueOverview.ViewModels
     {
       base.Execute_Save(sender);
       IsHomeTeam = CurrentItem.TeamId == Parent.CurrentItem.HomeTeam.TeamId;
+      Parent.ReloadEvents();
     }
 
     private void __RefreshPlayer()
@@ -121,7 +134,6 @@ namespace SportLeagueOverview.ViewModels
         {
           PlayersForTeam.Add(player);
         }
-        OnPropertyChanged(nameof(Teams));
       }
     }
 

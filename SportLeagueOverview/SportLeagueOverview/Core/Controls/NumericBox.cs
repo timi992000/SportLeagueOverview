@@ -8,7 +8,6 @@ namespace SportLeagueOverview.Core.Controls
     public NumericBox()
     {
       HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
-      Width = 40;
       TextChanged += (sender, e) =>
       {
         if (sender is TextBox tmpTextBox)

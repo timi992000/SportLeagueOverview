@@ -16,7 +16,7 @@
         </Grid.RowDefinitions>
 
         <ListBox  Background="Transparent" BorderBrush="Transparent"
-                  BorderThickness="0" Padding="0"  SelectionMode="Single" ItemsSource="{Binding DisplayMatches}" >
+                  BorderThickness="0" Padding="0"  SelectionMode="Single" ItemsSource="{Binding DisplayMatches, Mode=TwoWay}" >
             <ListBox.ItemTemplate>
                 <DataTemplate>
                     <StackPanel x:Name="Stackpanel" Orientation="Horizontal" Margin="5">

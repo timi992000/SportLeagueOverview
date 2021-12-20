@@ -27,8 +27,12 @@ namespace SportLeagueOverview.Core.Entitites
         [DisplayName("Wappen")]
         public string CoatOfArms { get; set; }
 
-        [ColumnName("TrainerId")]
-        public int CoachId { get; set; }
+    [ColumnName("TrainerId")]
+    public int CoachId { get; set; }
+
+    [DisplayName("Adress Id")]
+    [ColumnName("AdressId")]
+    public int AdressId { get; set; }
 
         public override string ToString()
         {

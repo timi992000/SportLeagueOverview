@@ -23,9 +23,13 @@
                 <RowDefinition MaxHeight="35"/>
                 <RowDefinition MaxHeight="35"/>
                 <RowDefinition MaxHeight="35"/>
+                <RowDefinition MaxHeight="35"/>
+                <RowDefinition />
+                <RowDefinition />
+                <RowDefinition />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition MinWidth="130"/>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
                 <ColumnDefinition/>
@@ -74,6 +78,15 @@
                     Grid.Column="1"
                     IsChecked="{Binding IsCoach, Mode=TwoWay}"/>
 
+            <Label Content="Mannschaft"
+               Grid.Row="5"
+               Grid.Column="0"
+               Margin="0 0 0 5"/>
+            <ComboBox Grid.Row="5"
+                    Grid.Column="1"
+                      ItemsSource="{Binding Teams}"
+                      SelectedItem="{Binding Team, Mode=TwoWay}" Margin="0 0 0 5"/>
+
             <StackPanel Grid.Row="0"
                    Grid.RowSpan="100"
                    Grid.Column="3">
@@ -85,6 +98,8 @@
                 </b:Interaction.Triggers>
                 <Image Source="{Binding ProfilePicture, Mode=TwoWay}"/>
             </StackPanel >
+
+            <controls:AdressControl Grid.Row="6" Grid.ColumnSpan="2"/>
         </Grid>
         <CoreViews:DetailViewBottomContent Grid.Row="1" VerticalContentAlignment="Center"/>
     </Grid>
